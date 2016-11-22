@@ -5,6 +5,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.Iterator;
+
+
 import java.io.IOException;
 
 /**
@@ -25,11 +27,16 @@ public class PageDownloader {
 				}
                 System.err.println("Downloading Page:" + i + "...");
                 Document doc = new PageDownloader().download("https://rarbg.to/torrents.php?category=14;17;42;44;45;46;47;48&page=" + i);
+                org.jsoup.select.Elements elements = doc.getElementsByClass("lista2");
+                if(elements.size()==0)
+                {
+                	System.out.println(doc);
+                	System.exit(-1);
+                }
                 Iterator<Element> iter = doc.getElementsByClass("lista2").iterator();
                 while (iter.hasNext()) {
                     String str = (String) iter.next().toString();
                     System.out.println(str);
-                    System.exit(-1);
                 }
             }
         } catch (IOException e) {
