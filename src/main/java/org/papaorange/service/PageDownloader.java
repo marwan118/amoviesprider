@@ -29,6 +29,7 @@ public class PageDownloader {
                 while (iter.hasNext()) {
                     String str = (String) iter.next().toString();
                     System.out.println(str);
+                    System.exit(-1);
                 }
             }
         } catch (IOException e) {
