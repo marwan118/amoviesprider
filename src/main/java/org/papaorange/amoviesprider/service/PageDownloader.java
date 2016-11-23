@@ -1,4 +1,4 @@
-package org.papaorange.service;
+package org.papaorange.amoviesprider.service;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
