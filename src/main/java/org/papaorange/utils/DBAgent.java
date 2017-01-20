@@ -1,13 +1,16 @@
 package org.papaorange.utils;
 
+import java.util.ArrayList;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.bson.BasicBSONObject;
+import org.apache.log4j.chainsaw.Main;
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -43,6 +46,20 @@ public class DBAgent
 	this.mongoClient.close();
     }
 
+    public Map<String, Object> getAllDocumentsKey(String collectionName, String key)
+    {
+	Map<String, Object> ret = new HashMap<>();
+
+	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	MongoCursor<Document> cur = collection.find().iterator();
+	while (cur.hasNext())
+	{
+	    Document document = cur.next();
+	    ret.put((String) document.get(key), "");
+	}
+	return ret;
+    }
+
     public void addOneDocument(Map<String, String> doc, String collectionName)
     {
 	try
@@ -75,4 +92,5 @@ public class DBAgent
 	}
 	return ret;
     }
+
 }
