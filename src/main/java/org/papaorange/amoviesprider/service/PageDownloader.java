@@ -18,8 +18,11 @@ public class PageDownloader
     public Document download(String url) throws IOException
     {
 	return Jsoup.connect(url)
-		.header("User-Agent",
-			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/602.3.12 (KHTML, like Gecko) Version/10.0.2 Safari/602.3.12")
+		.header("Accept", "text/html")
+		.header("Accept-Charset", "utf-8")
+		.header("Accept-Encoding", "gzip")
+		.header("Accept-Language", "en-US,en")
+		.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
 		.timeout(0).get();
     }
 
@@ -85,6 +88,15 @@ public class PageDownloader
 	}
 	for (Element element : elements)
 	{
+	    try
+	    {
+		Thread.sleep(300);
+	    }
+	    catch (InterruptedException e)
+	    {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
 	    String url = element.getElementsByTag("a").get(0).attr("href");
 	    if (toCollectUrls.containsKey(url))
 	    {
@@ -117,7 +129,7 @@ public class PageDownloader
     public static void main(String[] args)
     {
 
-	collectRecursively("https://movie.douban.com/subject/26896962/");
+	collectRecursively("https://movie.douban.com/subject/20278505/?from=subject-page");
 	String string = JSON.serialize(toCollectUrls);
 
 	System.out.println(string);
