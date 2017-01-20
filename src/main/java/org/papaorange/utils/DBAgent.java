@@ -1,39 +1,78 @@
 package org.papaorange.utils;
 
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.bson.BasicBSONObject;
 import org.bson.Document;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 public class DBAgent
 {
-    public static void main(String args[])
+
+    private String dbAddress = "";
+    private int dbPort = -1;
+    private String dbName = "";
+    private MongoClient mongoClient = null;
+    private MongoDatabase mongoDatabase = null;
+    private static final Logger log = Logger.getLogger(DBAgent.class);
+
+    public DBAgent(String dbAddress, int dbPort, String dbName)
+    {
+	this.dbAddress = dbAddress;
+	this.dbPort = dbPort;
+	this.dbName = dbName;
+    }
+
+    public void connect()
+    {
+	this.mongoClient = new MongoClient(dbAddress, dbPort);
+	this.mongoDatabase = this.mongoClient.getDatabase(dbName);
+	log.info("连接到数据库:" + dbAddress + ":" + dbPort + "/" + dbName);
+    }
+
+    public void close()
+    {
+	this.mongoClient.close();
+    }
+
+    public void addOneDocument(Map<String, String> doc, String collectionName)
     {
 	try
 	{
-	    // 连接到 mongodb 服务
-	    MongoClient mongoClient = new MongoClient("papaorange.org", 27017);
+	    MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	    Document document = new Document();
 
-	    // 连接到数据库
-	    MongoDatabase mongoDatabase = mongoClient.getDatabase("movie");
-	    System.out.println("Connect to database successfully");
-
-	    MongoCollection<Document> collection = mongoDatabase.getCollection("info");
-	    FindIterable<Document> finds = collection.find();
-	    Document document = new Document("name", "驴得水");
-	    collection.insertOne(document);
-	    for (Document doc : finds)
+	    for (String key : doc.keySet())
 	    {
-		System.out.println(doc);
+		document.append(key, doc.get(key));
 	    }
-	    mongoClient.close();
-	    System.out.println("集合 info 选择成功");
+	    collection.insertOne(document);
 	}
 	catch (Exception e)
 	{
 	    System.err.println(e.getClass().getName() + ": " + e.getMessage());
 	}
+    }
+
+    public boolean isDocumentExist(String collectionName, BasicDBObject object)
+    {
+	boolean ret = false;
+	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	FindIterable<Document> find = collection.find(object);
+	MongoCursor<Document> cursor = find.iterator();
+	while (cursor.hasNext())
+	{
+	    System.out.println(cursor.next());
+	    ret = true;
+	}
+	return ret;
     }
 }

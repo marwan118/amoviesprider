@@ -4,8 +4,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.papaorange.utils.DBAgent;
 import org.papaorange.utils.Utils;
-import com.mongodb.util.JSON;
+
+import com.mongodb.BasicDBObject;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -17,18 +19,17 @@ public class PageDownloader
 {
     public Document download(String url) throws IOException
     {
-	return Jsoup.connect(url)
-		.header("Accept", "text/html")
-		.header("Accept-Charset", "utf-8")
-		.header("Accept-Encoding", "gzip")
-		.header("Accept-Language", "en-US,en")
-		.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
+	return Jsoup.connect(url).header("Accept", "text/html").header("Accept-Charset", "utf-8")
+		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
+		.header("User-Agent",
+			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
 		.timeout(0).get();
     }
 
-    private static Hashtable<String, String> toCollectUrls = new Hashtable<>();
+    // private static Hashtable<String, String> toCollectUrls = new
+    // Hashtable<>();
 
-    public static void collectRecursively(String seedUrl)
+    public static void collectRecursively(String seedUrl, DBAgent agent)
     {
 
 	Document document = null;
@@ -51,7 +52,6 @@ public class PageDownloader
 	}
 	else
 	{
-	    // property="v:initialReleaseDate"
 	    yearStr = Utils
 		    .matchYear(document.getElementsByAttributeValue("property", "v:initialReleaseDate").text().trim());
 	}
@@ -88,17 +88,17 @@ public class PageDownloader
 	}
 	for (Element element : elements)
 	{
+	    Hashtable<String, String> movieItem = new Hashtable<>();
 	    try
 	    {
 		Thread.sleep(300);
 	    }
 	    catch (InterruptedException e)
 	    {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
 	    String url = element.getElementsByTag("a").get(0).attr("href");
-	    if (toCollectUrls.containsKey(url))
+	    if (agent.isDocumentExist("info", new BasicDBObject("url", url)))
 	    {
 		// System.out.println("重复，忽略。。。");
 	    }
@@ -117,21 +117,26 @@ public class PageDownloader
 	    else
 	    {
 		String name = element.getElementsByTag("dd").get(0).text();
-		toCollectUrls.put(url, name);
+		movieItem.put("url", url);
+		movieItem.put("name", name);
+		movieItem.put("year", yearStr);
+		movieItem.put("rateValue", rateValueStr);
+		movieItem.put("rateNumber", rateNumberStr);
+
+		agent.addOneDocument(movieItem, "info");
 
 		System.out.println("抓取影片：" + name + " 年代：" + year + " 评分/评分人数:" + ratevalue + "/" + rateNumber + " url:"
-			+ url + "\t 已抓取:" + toCollectUrls.size());
-		collectRecursively(url);
+			+ url + "\t 已抓取:" + movieItem.size());
+		collectRecursively(url, agent);
 	    }
 	}
     }
 
     public static void main(String[] args)
     {
-
-	collectRecursively("https://movie.douban.com/subject/20278505/?from=subject-page");
-	String string = JSON.serialize(toCollectUrls);
-
-	System.out.println(string);
+	DBAgent agent = new DBAgent("localhost", 27017, "movie");
+	agent.connect();
+	collectRecursively("https://movie.douban.com/subject/20278505/?from=subject-page", agent);
+	agent.close();
     }
 }
