@@ -82,6 +82,10 @@ public class DoubanDownloader
 	    if (document.getElementsByAttributeValue("property", "v:votes").size() > 0)
 	    {
 		rateNumberStr = document.getElementsByAttributeValue("property", "v:votes").text();
+		if (rateNumberStr.equals(""))
+		{
+		    rateNumberStr = "0";
+		}
 	    }
 	    else
 	    {
@@ -92,6 +96,10 @@ public class DoubanDownloader
 	    if (document.getElementsByAttributeValue("property", "v:average").size() > 0)
 	    {
 		rateValueStr = document.getElementsByAttributeValue("property", "v:average").text();
+		if (rateValueStr.equals(""))
+		{
+		    rateValueStr = "0";
+		}
 	    }
 	    else
 	    {
@@ -102,15 +110,17 @@ public class DoubanDownloader
 	    if (year < 1990)
 	    {
 		System.err.println("90年以前电影，忽略。。。");
-
+		this.existMvMap.put(seedUrl, "");
 	    }
 	    else if (rateNumber < 1000)
 	    {
 		System.err.println("投票人数少于1000，忽略。。。");
+		this.existMvMap.put(seedUrl, "");
 	    }
 	    else if (ratevalue < 5)
 	    {
 		System.err.println("评分低于5分，忽略。。。");
+		this.existMvMap.put(seedUrl, "");
 	    }
 	    else
 	    {
@@ -175,7 +185,8 @@ public class DoubanDownloader
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloader("https://movie.douban.com/subject/25934014/", agent).collectRecursively();
+	new DoubanDownloader("https://movie.douban.com/subject/26311988/?from=subject-page", agent)
+		.collectRecursively();
 	agent.close();
     }
 }
