@@ -181,6 +181,7 @@ public class DoubanDownloaderBFS
 		Hashtable<String, String> ignoreItem = new Hashtable<>();
 		ignoreItem.put("url", url);
 		agent.addOneDocument(ignoreItem, "ignore");
+		return childs;
 	    }
 	    else if (rateNumber < 5000)
 	    {
@@ -189,6 +190,7 @@ public class DoubanDownloaderBFS
 		Hashtable<String, String> ignoreItem = new Hashtable<>();
 		ignoreItem.put("url", url);
 		agent.addOneDocument(ignoreItem, "ignore");
+		return childs;
 	    }
 	    else if (ratevalue < 6)
 	    {
@@ -197,6 +199,7 @@ public class DoubanDownloaderBFS
 		Hashtable<String, String> ignoreItem = new Hashtable<>();
 		ignoreItem.put("url", url);
 		agent.addOneDocument(ignoreItem, "ignore");
+		return childs;
 	    }
 	    else
 	    {
@@ -266,7 +269,7 @@ public class DoubanDownloaderBFS
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloaderBFS("https://movie.douban.com/subject/11510624/?from=subject-page", agent).collectBFS();
+	new DoubanDownloaderBFS("https://movie.douban.com/subject/10485647/", agent).collectBFS();
 	agent.close();
     }
 }
