@@ -11,7 +11,6 @@ import org.papaorange.utils.Utils;
 import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
@@ -25,7 +24,8 @@ public class DoubanDownloaderBFS
     private DBAgent agent = null;
     private LinkedList<String> bfsQ = new LinkedList<>();
     private Map<String, Object> existMvMap = null;
-    private Map<String, Object> ignoreMvMap = new HashMap<String, Object>();
+    private Map<String, Object> ignoreMvMap = null;
+    private Map<String, Object> lastTimeRemainMvMap = null;
     private static final Logger log = Logger.getLogger(DoubanDownloaderBFS.class);
     private int newCollectCount = 0;
 
@@ -45,30 +45,58 @@ public class DoubanDownloaderBFS
 	this.agent = agent;
 	this.existMvMap = agent.getAllDocumentsKey("good", "url");
 	this.ignoreMvMap = agent.getAllDocumentsKey("ignore", "url");
+	this.lastTimeRemainMvMap = agent.getAllDocumentsKey("remain", "url");
+	if (this.lastTimeRemainMvMap.size() > 0)
+	{
+	    for (String url : this.lastTimeRemainMvMap.keySet())
+	    {
+		bfsQ.add(url);
+	    }
+	}
     }
 
     public void collectBFS()
     {
-	bfsQ.add(seedUrl);
-	List<String> childUrl = processOneMovie(seedUrl);
+	List<String> childUrl = new ArrayList<String>();
+	if (lastTimeRemainMvMap.size() == 0)
+	{
+	    bfsQ.add(seedUrl);
+	    Hashtable<String, String> ignoreItem = new Hashtable<>();
+	    ignoreItem.put("url", seedUrl);
+	    agent.addOneDocument(ignoreItem, "remain");
+	    childUrl = processOneMovie(seedUrl);
+	}
+
 	while (true)
 	{
 	    for (String child : childUrl)
 	    {
 		if (!existMvMap.containsKey(child) && !ignoreMvMap.containsKey(child))
 		{
-		    bfsQ.add(child);
-		    ignoreMvMap.put(child, "");
-		    Hashtable<String, String> ignoreItem = new Hashtable<>();
-		    ignoreItem.put("url", child);
-		    agent.addOneDocument(ignoreItem, "ignore");
+		    if (!bfsQ.contains(child))
+		    {
+			bfsQ.add(child);
+			Hashtable<String, String> ignoreItem = new Hashtable<>();
+			ignoreItem.put("url", child);
+			agent.addOneDocument(ignoreItem, "remain");
+			// agent.removeDocument(ignoreItem, "remain", "url",
+			// child);
+			log.info("bfsQ加入待获取影片url:" + child);
+		    }
 		}
 	    }
 
 	    String head = bfsQ.removeFirst();
+	    Hashtable<String, String> ignoreItem = new Hashtable<>();
+	    ignoreItem.put("url", head);
+	    agent.removeDocument(ignoreItem, "remain", "url", head);
 	    if (!existMvMap.containsKey(head))
 	    {
 		childUrl = processOneMovie(head);
+	    }
+	    else
+	    {
+		childUrl.clear();
 	    }
 
 	    if (bfsQ.size() == 0)
@@ -102,7 +130,7 @@ public class DoubanDownloaderBFS
 	{
 	    return childs;
 	}
-	if (!existMvMap.containsKey(url) && !ignoreMvMap.containsKey(url))
+	if (!existMvMap.containsKey(url))
 	{
 	    String yearStr = null;
 	    String rateNumberStr = null;
@@ -146,20 +174,29 @@ public class DoubanDownloaderBFS
 	    }
 	    float ratevalue = Float.parseFloat(rateValueStr);
 
-	    if (year < 2000)
+	    if (year < 1995)
 	    {
-		log.info("2000年以前电影，忽略。。。");
+		log.info("1995年以前电影，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
+		Hashtable<String, String> ignoreItem = new Hashtable<>();
+		ignoreItem.put("url", url);
+		agent.addOneDocument(ignoreItem, "ignore");
 	    }
 	    else if (rateNumber < 5000)
 	    {
-		log.info("投票人数少于5000，忽略。。。");
+		log.info("投票人数少于5000，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
+		Hashtable<String, String> ignoreItem = new Hashtable<>();
+		ignoreItem.put("url", url);
+		agent.addOneDocument(ignoreItem, "ignore");
 	    }
-	    else if (ratevalue < 7)
+	    else if (ratevalue < 6)
 	    {
-		log.info("评分低于7分，忽略。。。");
+		log.info("评分低于6分，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
+		Hashtable<String, String> ignoreItem = new Hashtable<>();
+		ignoreItem.put("url", url);
+		agent.addOneDocument(ignoreItem, "ignore");
 	    }
 	    else
 	    {
@@ -188,13 +225,13 @@ public class DoubanDownloaderBFS
 		this.existMvMap.put(url, "");
 		this.agent.addOneDocument(movieItem, "good");
 
-		log.info("抓取影片：" + name + " 年代：" + year + " 评分/评分人数:" + ratevalue + "/" + rateNumber + " url:" + url
-			+ "\t 已抓取:" + newCollectCount);
+		log.info("抓取影片：" + name + "(" + year + ") " + ratevalue + "/" + rateNumber + "\t 已抓取:"
+			+ newCollectCount);
 	    }
 	}
 	else
 	{
-	    log.info("重复影片,忽略...抓取推荐影片");
+	    log.info("重复影片,忽略...");
 	}
 
 	Elements elements = document.getElementsByClass("recommendations-bd");
@@ -210,8 +247,14 @@ public class DoubanDownloaderBFS
 	for (Element element : elements)
 	{
 	    String childUrl = element.getElementsByTag("a").get(0).attr("href");
-	    if (existMvMap.containsKey(childUrl) || ignoreMvMap.containsKey(childUrl))
+	    if (existMvMap.containsKey(childUrl))
 	    {
+		log.info("影片已存在影片库中... ");
+		continue;
+	    }
+	    if (ignoreMvMap.containsKey(childUrl))
+	    {
+		log.info("影片已存在忽略库中...");
 		continue;
 	    }
 	    childs.add(childUrl);
@@ -223,7 +266,7 @@ public class DoubanDownloaderBFS
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloaderBFS("https://movie.douban.com/subject/1485260/?from=subject-page", agent).collectBFS();
+	new DoubanDownloaderBFS("https://movie.douban.com/subject/11510624/?from=subject-page", agent).collectBFS();
 	agent.close();
     }
 }

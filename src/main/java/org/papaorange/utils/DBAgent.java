@@ -12,6 +12,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 
 public class DBAgent
 {
@@ -56,6 +57,26 @@ public class DBAgent
 	return ret;
     }
 
+    public void removeDocument(Map<String, String> doc, String collectionName, String filterName, String filterValue)
+    {
+	try
+	{
+	    MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	    // DeleteResult result =
+	    // collection.deleteOne(Filters.eq(doc.get(filterName),
+	    // filterValue));
+
+	    BasicDBObject toDelete = new BasicDBObject();
+	    toDelete.put(filterName, filterValue);
+	    DeleteResult result = collection.deleteOne(toDelete);
+	    System.out.println(result);
+	}
+	catch (Exception e)
+	{
+	    System.err.println(e.getClass().getName() + ": " + e.getMessage());
+	}
+    }
+
     public void addOneDocument(Map<String, String> doc, String collectionName)
     {
 	try
@@ -88,5 +109,4 @@ public class DBAgent
 	}
 	return ret;
     }
-
 }
