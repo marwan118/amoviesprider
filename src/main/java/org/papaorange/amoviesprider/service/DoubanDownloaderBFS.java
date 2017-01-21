@@ -232,10 +232,21 @@ public class DoubanDownloaderBFS
 		movieItem.put("rateNumber", rateNumber);
 		movieItem.put("imdbLink", getMovieIMDBLinkFromHtmlDocument(document));
 		movieItem.put("summary", getMovieSummaryFromHtmlDocument(document));
+		String posterLink = getMoviePosterLinkFromHtmlDocument(document);
+		String path = "/data/db/poster/" + posterLink.substring(posterLink.lastIndexOf("/"));
+		movieItem.put("posterUrl", getMoviePosterLinkFromHtmlDocument(document));
+		movieItem.put("posterPath", path);
 		newCollectCount++;
 		this.existMvMap.put(url, "");
 		this.agent.addOneDocument(movieItem, "good");
-
+		try
+		{
+		    ResDownloader.download(posterLink, path);
+		}
+		catch (Exception e)
+		{
+		    e.printStackTrace();
+		}
 		log.info("抓取影片：" + name + "(" + year + ") " + ratevalue + "/" + rateNumber + "\t 已抓取:" + newCollectCount
 			+ " url:" + url);
 	    }
@@ -299,6 +310,18 @@ public class DoubanDownloaderBFS
 	    imdbLink = elems.get(0).attr("href");
 	}
 	return imdbLink;
+    }
+
+    private String getMoviePosterLinkFromHtmlDocument(Document doc)
+    {
+	// rel="v:image"
+	String posterLink = "";
+	Elements elems = doc.getElementsByAttributeValue("rel", "v:image");
+	if (elems.size() > 0)
+	{
+	    posterLink = elems.get(0).attr("src");
+	}
+	return posterLink;
     }
 
     private String getMovieSummaryFromHtmlDocument(Document doc)
