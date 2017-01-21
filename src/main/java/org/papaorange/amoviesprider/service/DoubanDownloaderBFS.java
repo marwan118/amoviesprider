@@ -61,7 +61,7 @@ public class DoubanDownloaderBFS
 	if (lastTimeRemainMvMap.size() == 0)
 	{
 	    bfsQ.add(seedUrl);
-	    Hashtable<String, String> ignoreItem = new Hashtable<>();
+	    Hashtable<String, Object> ignoreItem = new Hashtable<>();
 	    ignoreItem.put("url", seedUrl);
 	    agent.addOneDocument(ignoreItem, "remain");
 	    childUrl = processOneMovie(seedUrl);
@@ -76,7 +76,7 @@ public class DoubanDownloaderBFS
 		    if (!bfsQ.contains(child))
 		    {
 			bfsQ.add(child);
-			Hashtable<String, String> ignoreItem = new Hashtable<>();
+			Hashtable<String, Object> ignoreItem = new Hashtable<>();
 			ignoreItem.put("url", child);
 			agent.addOneDocument(ignoreItem, "remain");
 			// agent.removeDocument(ignoreItem, "remain", "url",
@@ -87,7 +87,7 @@ public class DoubanDownloaderBFS
 	    }
 
 	    String head = bfsQ.removeFirst();
-	    Hashtable<String, String> ignoreItem = new Hashtable<>();
+	    Hashtable<String, Object> ignoreItem = new Hashtable<>();
 	    ignoreItem.put("url", head);
 	    agent.removeDocument(ignoreItem, "remain", "url", head);
 	    if (!existMvMap.containsKey(head))
@@ -174,12 +174,17 @@ public class DoubanDownloaderBFS
 	    }
 	    float ratevalue = Float.parseFloat(rateValueStr);
 
-	    if (year < 1995)
+	    if (year < 1990)
 	    {
-		log.info("1995年以前电影，忽略。。。" + url);
+		log.info("1990年以前电影，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
-		Hashtable<String, String> ignoreItem = new Hashtable<>();
+		Hashtable<String, Object> ignoreItem = new Hashtable<>();
+		ignoreItem.put("name", getMovieNameFromHtmlDocument(document));
 		ignoreItem.put("url", url);
+		ignoreItem.put("ignoreBy", "year");
+		ignoreItem.put("year", year);
+		ignoreItem.put("rateNumber", rateNumber);
+		ignoreItem.put("rateValue", ratevalue);
 		agent.addOneDocument(ignoreItem, "ignore");
 		return childs;
 	    }
@@ -187,8 +192,13 @@ public class DoubanDownloaderBFS
 	    {
 		log.info("投票人数少于5000，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
-		Hashtable<String, String> ignoreItem = new Hashtable<>();
+		Hashtable<String, Object> ignoreItem = new Hashtable<>();
+		ignoreItem.put("name", getMovieNameFromHtmlDocument(document));
 		ignoreItem.put("url", url);
+		ignoreItem.put("ignoreBy", "rateNumber");
+		ignoreItem.put("year", year);
+		ignoreItem.put("rateNumber", rateNumber);
+		ignoreItem.put("rateValue", ratevalue);
 		agent.addOneDocument(ignoreItem, "ignore");
 		return childs;
 	    }
@@ -196,40 +206,38 @@ public class DoubanDownloaderBFS
 	    {
 		log.info("评分低于6分，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
-		Hashtable<String, String> ignoreItem = new Hashtable<>();
+		Hashtable<String, Object> ignoreItem = new Hashtable<>();
+		ignoreItem.put("name", getMovieNameFromHtmlDocument(document));
 		ignoreItem.put("url", url);
+		ignoreItem.put("ignoreBy", "ratevalue");
+		ignoreItem.put("year", year);
+		ignoreItem.put("rateNumber", rateNumber);
+		ignoreItem.put("rateValue", ratevalue);
 		agent.addOneDocument(ignoreItem, "ignore");
 		return childs;
 	    }
 	    else
 	    {
-		Hashtable<String, String> movieItem = new Hashtable<>();
-		// v:itemreviewed
-		String name = "";
-		if (document.getElementsByAttributeValue("property", "v:itemreviewed").size() > 0)
-		{
-		    name = document.getElementsByAttributeValue("property", "v:itemreviewed").get(0).text();
-		    if (name.contains(" "))
-		    {
-			name = name.substring(0, name.indexOf(" "));
-		    }
-		}
-		else
+		Hashtable<String, Object> movieItem = new Hashtable<>();
+		String name = getMovieNameFromHtmlDocument(document);
+		if (name.equals(""))
 		{
 		    return childs;
 		}
 
 		movieItem.put("url", url);
 		movieItem.put("name", name);
-		movieItem.put("year", yearStr);
-		movieItem.put("rateValue", rateValueStr);
-		movieItem.put("rateNumber", rateNumberStr);
+		movieItem.put("year", year);
+		movieItem.put("rateValue", ratevalue);
+		movieItem.put("rateNumber", rateNumber);
+		movieItem.put("imdbLink", getMovieIMDBLinkFromHtmlDocument(document));
+		movieItem.put("summary", getMovieSummaryFromHtmlDocument(document));
 		newCollectCount++;
 		this.existMvMap.put(url, "");
 		this.agent.addOneDocument(movieItem, "good");
 
-		log.info("抓取影片：" + name + "(" + year + ") " + ratevalue + "/" + rateNumber + "\t 已抓取:"
-			+ newCollectCount);
+		log.info("抓取影片：" + name + "(" + year + ") " + ratevalue + "/" + rateNumber + "\t 已抓取:" + newCollectCount
+			+ " url:" + url);
 	    }
 	}
 	else
@@ -265,11 +273,51 @@ public class DoubanDownloaderBFS
 	return childs;
     }
 
+    private String getMovieNameFromHtmlDocument(Document doc)
+    {
+	// v:itemreviewed
+
+	String name = "";
+
+	if (doc.getElementsByAttributeValue("property", "v:itemreviewed").size() > 0)
+	{
+	    name = doc.getElementsByAttributeValue("property", "v:itemreviewed").get(0).text();
+	    if (name.contains(" "))
+	    {
+		name = name.substring(0, name.indexOf(" "));
+	    }
+	}
+	return name;
+    }
+
+    private String getMovieIMDBLinkFromHtmlDocument(Document doc)
+    {
+	String imdbLink = "";
+	Elements elems = doc.getElementsByAttributeValueContaining("href", "http://www.imdb.com/title/");
+	if (elems.size() > 0)
+	{
+	    imdbLink = elems.get(0).attr("href");
+	}
+	return imdbLink;
+    }
+
+    private String getMovieSummaryFromHtmlDocument(Document doc)
+    {
+	// v:summary
+	String summary = "";
+	if (doc.getElementsByAttributeValue("property", "v:summary").size() > 0)
+	{
+	    summary = doc.getElementsByAttributeValue("property", "v:summary").get(0).text();
+	}
+
+	return summary;
+    }
+
     public static void main(String[] args)
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloaderBFS("https://movie.douban.com/subject/10485647/", agent).collectBFS();
+	new DoubanDownloaderBFS("https://movie.douban.com/subject/1292720/?from=subject-page", agent).collectBFS();
 	agent.close();
     }
 }

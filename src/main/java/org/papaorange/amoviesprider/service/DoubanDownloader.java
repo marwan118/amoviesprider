@@ -124,7 +124,7 @@ public class DoubanDownloader
 	    }
 	    else
 	    {
-		Hashtable<String, String> movieItem = new Hashtable<>();
+		Hashtable<String, Object> movieItem = new Hashtable<>();
 		// v:itemreviewed
 		String name = "";
 		if (document.getElementsByAttributeValue("property", "v:itemreviewed").size() > 0)
@@ -185,7 +185,7 @@ public class DoubanDownloader
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloader("https://movie.douban.com/subject/1947793/?from=subject-page", agent).collectRecursively();
+	new DoubanDownloader("https://movie.douban.com/subject/25814705", agent).collectRecursively();
 	agent.close();
     }
 }

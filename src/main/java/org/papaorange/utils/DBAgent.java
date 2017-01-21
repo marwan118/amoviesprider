@@ -57,7 +57,7 @@ public class DBAgent
 	return ret;
     }
 
-    public void removeDocument(Map<String, String> doc, String collectionName, String filterName, String filterValue)
+    public void removeDocument(Map<String, Object> doc, String collectionName, String filterName, String filterValue)
     {
 	try
 	{
@@ -77,7 +77,7 @@ public class DBAgent
 	}
     }
 
-    public void addOneDocument(Map<String, String> doc, String collectionName)
+    public void addOneDocument(Map<String, Object> doc, String collectionName)
     {
 	try
 	{
