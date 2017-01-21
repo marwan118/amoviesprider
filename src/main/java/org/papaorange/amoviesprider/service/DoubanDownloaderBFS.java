@@ -233,7 +233,7 @@ public class DoubanDownloaderBFS
 		movieItem.put("imdbLink", getMovieIMDBLinkFromHtmlDocument(document));
 		movieItem.put("summary", getMovieSummaryFromHtmlDocument(document));
 		String posterLink = getMoviePosterLinkFromHtmlDocument(document);
-		String path = "/data/db/poster/" + posterLink.substring(posterLink.lastIndexOf("/"));
+		String path = "/data/db/poster/" + posterLink.substring(posterLink.lastIndexOf("/") + 1);
 		movieItem.put("posterUrl", getMoviePosterLinkFromHtmlDocument(document));
 		movieItem.put("posterPath", path);
 		newCollectCount++;
