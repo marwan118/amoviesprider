@@ -70,7 +70,7 @@ public class DoubanDownloader
 	    String rateValueStr = null;
 	    if (document.getElementsByClass("year").size() > 0)
 	    {
-		yearStr = document.getElementsByClass("year").get(0).text().replace("(", "").replace(")", "");
+		yearStr = Utils.matchYear(document.getElementsByClass("year").get(0).text());
 	    }
 	    else
 	    {
@@ -109,17 +109,17 @@ public class DoubanDownloader
 
 	    if (year < 1990)
 	    {
-		System.err.println("90年以前电影，忽略。。。");
+		log.info("90年以前电影，忽略。。。");
 		this.existMvMap.put(seedUrl, "");
 	    }
 	    else if (rateNumber < 1000)
 	    {
-		System.err.println("投票人数少于1000，忽略。。。");
+		log.error("投票人数少于1000，忽略。。。");
 		this.existMvMap.put(seedUrl, "");
 	    }
 	    else if (ratevalue < 5)
 	    {
-		System.err.println("评分低于5分，忽略。。。");
+		log.info("评分低于5分，忽略。。。");
 		this.existMvMap.put(seedUrl, "");
 	    }
 	    else
@@ -149,13 +149,13 @@ public class DoubanDownloader
 		this.existMvMap.put(seedUrl, "");
 		this.agent.addOneDocument(movieItem, "info");
 
-		System.out.println("抓取影片：" + name + " 年代：" + year + " 评分/评分人数:" + ratevalue + "/" + rateNumber + " url:"
-			+ seedUrl + "\t 已抓取:" + newCollectCount);
+		log.info("抓取影片：" + name + " 年代：" + year + " 评分/评分人数:" + ratevalue + "/" + rateNumber + " url:" + seedUrl
+			+ "\t 已抓取:" + newCollectCount);
 	    }
 	}
 	else
 	{
-	    System.out.println("重复影片,忽略...抓取推荐影片");
+	    log.info("重复影片,忽略...抓取推荐影片");
 	}
 
 	Elements elements = document.getElementsByClass("recommendations-bd");
@@ -185,8 +185,7 @@ public class DoubanDownloader
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloader("https://movie.douban.com/subject/26311988/?from=subject-page", agent)
-		.collectRecursively();
+	new DoubanDownloader("https://movie.douban.com/subject/1947793/?from=subject-page", agent).collectRecursively();
 	agent.close();
     }
 }

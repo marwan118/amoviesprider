@@ -1,13 +1,9 @@
 package org.papaorange.utils;
 
-import java.util.ArrayList;
-import java.util.Currency;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.chainsaw.Main;
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
