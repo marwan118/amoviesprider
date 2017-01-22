@@ -33,7 +33,8 @@ public class DoubanDownloaderBFS
     {
 	log.debug("Download URL:" + url);
 	return Jsoup.connect(url).header("Accept", "text/html").header("Accept-Charset", "utf-8")
-		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
+		.header("Accept-Encoding", "gzip")
+		.header("Accept-Language", "en-US,en")
 		.header("User-Agent",
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
 		.timeout(0).get();
@@ -338,7 +339,7 @@ public class DoubanDownloaderBFS
 
     public static void main(String[] args)
     {
-	DBAgent agent = new DBAgent("localhost", 27017, "movie");
+	DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
 	agent.connect();
 	new DoubanDownloaderBFS("https://movie.douban.com/subject/1292720/?from=subject-page", agent).collectBFS();
 	agent.close();
