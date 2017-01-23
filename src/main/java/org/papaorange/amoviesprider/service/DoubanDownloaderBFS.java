@@ -340,7 +340,7 @@ public class DoubanDownloaderBFS
     {
 	DBAgent agent = new DBAgent("localhost", 27017, "movie");
 	agent.connect();
-	new DoubanDownloaderBFS("https://movie.douban.com/subject/1292720/?from=subject-page", agent).collectBFS();
+	new DoubanDownloaderBFS(args[0], agent).collectBFS();
 	agent.close();
     }
 }
