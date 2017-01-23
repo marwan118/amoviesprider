@@ -1,11 +1,12 @@
 package org.papaorange.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bson.Document;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -22,6 +23,7 @@ public class DBAgent
     private String dbName = "";
     private MongoClient mongoClient = null;
     private MongoDatabase mongoDatabase = null;
+    private int clusterCur = 0;
     private static final Logger log = Logger.getLogger(DBAgent.class);
 
     public DBAgent(String dbAddress, int dbPort, String dbName)
@@ -96,6 +98,34 @@ public class DBAgent
 	}
     }
 
+    public List<Document> findNextCluster(BasicDBObject condiction, String collectionName, int clusterSize)
+    {
+	List<Document> result = new ArrayList<>();
+	try
+	{
+	    MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	    MongoCursor<Document> cursor = collection.find(condiction).skip(this.clusterCur).limit(clusterSize)
+		    .iterator();
+	    int i = 0;
+	    while (cursor.hasNext())
+	    {
+		i++;
+		result.add(cursor.next());
+	    }
+	    this.clusterCur += i;
+	}
+	catch (Exception e)
+	{
+	    System.err.println(e.getClass().getName() + ": " + e.getMessage());
+	}
+	return result;
+    }
+
+    public void resetClusterCur()
+    {
+	this.clusterCur = 0;
+    }
+
     public boolean isDocumentExist(String collectionName, BasicDBObject object)
     {
 	boolean ret = false;
@@ -108,5 +138,27 @@ public class DBAgent
 	    ret = true;
 	}
 	return ret;
+    }
+
+    public static void main(String[] args)
+    {
+	DBAgent agent = new DBAgent("192.168.1.100", 27017, "movie");
+	agent.connect();
+	int i = 0;
+	while (true)
+	{
+	    List<Document> documents = agent.findNextCluster(
+		    new BasicDBObject().append("rateValue", new BasicDBObject().append("$gte", 8)), "good", 50);
+	    if (documents.size() == 0)
+	    {
+		break;
+	    }
+	    for (Document document : documents)
+	    {
+		System.out.println(i++ + ":" + document);
+	    }
+	    System.out.println();
+	}
+	agent.close();
     }
 }
