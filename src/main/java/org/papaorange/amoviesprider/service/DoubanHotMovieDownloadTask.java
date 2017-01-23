@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.papaorange.amoviesprider.model.DoubanHotMovieItem;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItemsCollection;
 import org.papaorange.amoviesprider.utils.DBAgent;
 import org.papaorange.amoviesprider.utils.Utils;
@@ -39,9 +40,9 @@ public class DoubanHotMovieDownloadTask
 	 *
 	 **/
 
-	for (Element elem : elems)
+	for (DoubanHotMovieItem item : collection.getSubjects())
 	{
-	    String url = elem.attr("href");
+	    String url = item.getUrl();
 	    new DoubanDownloaderBFS(url, agent).collectBFS();
 	}
 	agent.close();
