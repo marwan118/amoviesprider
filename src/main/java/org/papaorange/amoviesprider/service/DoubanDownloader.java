@@ -5,8 +5,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.papaorange.utils.DBAgent;
-import org.papaorange.utils.Utils;
+import org.papaorange.amoviesprider.utils.DBAgent;
+import org.papaorange.amoviesprider.utils.Utils;
 
 import java.io.IOException;
 import java.util.Hashtable;
