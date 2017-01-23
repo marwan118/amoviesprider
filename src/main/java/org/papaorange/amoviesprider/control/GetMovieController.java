@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.bson.Document;
-import org.papaorange.utils.DBAgent;
+import org.papaorange.amoviesprider.utils.DBAgent;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,4 +1,4 @@
-package org.papaorange.utils;
+package org.papaorange.amoviesprider.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

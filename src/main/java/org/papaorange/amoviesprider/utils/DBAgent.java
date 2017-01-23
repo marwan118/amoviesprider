@@ -1,4 +1,4 @@
-package org.papaorange.utils;
+package org.papaorange.amoviesprider.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
