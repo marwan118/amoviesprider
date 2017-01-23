@@ -1,7 +1,6 @@
 package org.papaorange.amoviesprider.service;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -28,17 +27,6 @@ public class DoubanDownloaderBFS
     private Map<String, Object> lastTimeRemainMvMap = null;
     private static final Logger log = Logger.getLogger(DoubanDownloaderBFS.class);
     private int newCollectCount = 0;
-
-    public Document download(String url) throws IOException
-    {
-	log.debug("Download URL:" + url);
-	return Jsoup.connect(url).header("Accept", "text/html").header("Accept-Charset", "utf-8")
-		.header("Accept-Encoding", "gzip")
-		.header("Accept-Language", "en-US,en")
-		.header("User-Agent",
-			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
-		.timeout(0).get();
-    }
 
     DoubanDownloaderBFS(String seedUrl, DBAgent agent)
     {
@@ -116,7 +104,7 @@ public class DoubanDownloaderBFS
 	try
 	{
 	    Thread.sleep(500);
-	    document = this.download(url);
+	    document = Utils.download(url);
 	}
 	catch (IOException e)
 	{
