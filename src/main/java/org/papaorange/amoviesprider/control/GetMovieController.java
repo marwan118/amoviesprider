@@ -15,7 +15,7 @@ import com.mongodb.BasicDBObject;
 public class GetMovieController
 {
 
-    private DBAgent agent = new DBAgent("192.168.1.100", 27017, "movie");
+    private DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
 
     public GetMovieController()
     {
