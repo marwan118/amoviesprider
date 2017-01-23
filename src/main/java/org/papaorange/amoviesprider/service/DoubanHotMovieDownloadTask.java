@@ -2,7 +2,6 @@ package org.papaorange.amoviesprider.service;
 
 import java.io.IOException;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItem;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItemsCollection;

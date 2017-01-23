@@ -30,7 +30,7 @@ public class DoubanDownloaderBFS
 
     DoubanDownloaderBFS(String seedUrl, DBAgent agent)
     {
-	this.seedUrl = seedUrl;
+	this.seedUrl = urlUnify(seedUrl);
 	this.agent = agent;
 	this.existMvMap = agent.getAllDocumentsKey("good", "url");
 	this.ignoreMvMap = agent.getAllDocumentsKey("ignore", "url");
@@ -42,6 +42,16 @@ public class DoubanDownloaderBFS
 		bfsQ.add(url);
 	    }
 	}
+    }
+
+    private static String urlUnify(String url)
+    {
+	url = url.contains("?") ? url.substring(0, url.indexOf("?") - 1) : url;
+	if (!url.endsWith("/"))
+	{
+	    url = url + "/";
+	}
+	return url;
     }
 
     public void collectBFS()
@@ -258,6 +268,7 @@ public class DoubanDownloaderBFS
 	for (Element element : elements)
 	{
 	    String childUrl = element.getElementsByTag("a").get(0).attr("href");
+	    childUrl = urlUnify(childUrl);
 	    if (existMvMap.containsKey(childUrl))
 	    {
 		log.info("影片已存在影片库中... ");
