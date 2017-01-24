@@ -10,6 +10,7 @@ import org.papaorange.amoviesprider.model.BtttTorrentItem;
 import org.papaorange.amoviesprider.parser.BtttParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -34,7 +35,7 @@ public class TorrentDownloadTask
 	}
     }
 
-    // @Scheduled(cron = "0 6 21 ? * *")
+    @Scheduled(cron = "0 1 3 ? * *")
     public void downloadTorrentTask()
     {
 	log.info("下载种子任务开始....");
