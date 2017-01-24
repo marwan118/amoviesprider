@@ -72,11 +72,17 @@ public class DBAgent
 	return ret;
     }
 
-    public int updateOneDocument(String collectionName, Document ori, String toInsertKey, BasicDBObject toInsertObj)
+    public int updateOneDocument(String collectionName, String key, Document ori, String toInsertKey,
+	    Object toInsertObj)
     {
 	int ret = 0;
 	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
-	collection.findOneAndUpdate(ori, ori.append(toInsertKey, toInsertObj));
+	// System.out.println(collection.find(new BasicDBObject().append(key,
+	// ori.getString(key))).iterator().next());
+
+	BasicDBObject update = new BasicDBObject();
+	update.put("$set", new BasicDBObject(toInsertKey, toInsertObj));
+	collection.findOneAndUpdate(new BasicDBObject().append(key, ori.getString(key)), update);
 
 	return ret;
     }

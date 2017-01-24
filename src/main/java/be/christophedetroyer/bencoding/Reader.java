@@ -34,8 +34,9 @@ public class Reader
      * and adds them to the list to finally return them.
      *
      * @return List<Object> containing all the parsed bencoded objects.
+     * @throws Exception 
      */
-    public synchronized List<IBencodable> read()
+    public synchronized List<IBencodable> read() throws Exception
     {
 	this.currentByteIndex = 0;
 	long fileSize = datablob.length;
@@ -53,8 +54,9 @@ public class Reader
      *
      * @return Returns an Object that represents either BByteString,
      *         BDictionary, BInt or BList.
+     * @throws Exception 
      */
-    private IBencodable readSingleType()
+    private IBencodable readSingleType() throws Exception
     {
 	// Read in the byte at current position and dispatch over it.
 	byte current = datablob[currentByteIndex];
@@ -78,7 +80,7 @@ public class Reader
 	case 'l':
 	    return readList();
 	}
-	throw new Error("Parser in invalid state at byte " + currentByteIndex);
+	throw new Exception("Parser in invalid state at byte " + currentByteIndex);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -94,8 +96,9 @@ public class Reader
      * separators between elements.
      *
      * @return BList object.
+     * @throws Exception 
      */
-    private BList readList()
+    private BList readList() throws Exception
     {
 	// If we got here, the current byte is an 'l'.
 	if (readCurrentByte() != 'l')
@@ -124,8 +127,9 @@ public class Reader
      * sequence.
      *
      * @return BByteString
+     * @throws Exception 
      */
-    private BByteString readByteString()
+    private BByteString readByteString() throws Exception
     {
 	String lengthAsString = "";
 	int lengthAsInt;
@@ -142,7 +146,7 @@ public class Reader
 	lengthAsInt = Integer.parseInt(lengthAsString);
 
 	if (readCurrentByte() != ':')
-	    throw new Error("Read length of byte string and was expecting ':' but got " + readCurrentByte());
+	    throw new Exception("Read length of byte string and was expecting ':' but got " + readCurrentByte());
 	currentByteIndex++; // Skip over the ':'.
 
 	// Read the actual data
@@ -168,8 +172,9 @@ public class Reader
      * spaces: d 3:bar 4:spam 3:foo i42e e.)
      *
      * @return BDictionary representing the dictionary.
+     * @throws Exception 
      */
-    private BDictionary readDictionary()
+    private BDictionary readDictionary() throws Exception
     {
 	// If we got here, the current byte is an 'd'.
 	if (readCurrentByte() != 'd')
@@ -199,12 +204,13 @@ public class Reader
      * zero is not permitted.
      *
      * @return BInt representing the value of the parsed integer.
+     * @throws Exception 
      */
-    private BInt readInteger()
+    private BInt readInteger() throws Exception
     {
 	// If we got here, the current byte is an 'i'.
 	if (readCurrentByte() != 'i')
-	    throw new Error("Error parsing integer. Was expecting an 'i' but got " + readCurrentByte());
+	    throw new Exception("Error parsing integer. Was expecting an 'i' but got " + readCurrentByte());
 	currentByteIndex++;// Skip the 'i'.
 
 	// Read in the integer number by number.
@@ -219,7 +225,7 @@ public class Reader
 	}
 
 	if (readCurrentByte() != 'e')
-	    throw new Error("Error parsing integer. Was expecting 'e' at end but got " + readCurrentByte());
+	    throw new Exception("Error parsing integer. Was expecting 'e' at end but got " + readCurrentByte());
 
 	currentByteIndex++; // Skip past 'e'
 	return new BInt(Long.parseLong(intString));

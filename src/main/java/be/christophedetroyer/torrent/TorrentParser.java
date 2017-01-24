@@ -14,13 +14,13 @@ import java.util.*;
  */
 public class TorrentParser
 {
-    public static Torrent parseTorrent(String filePath) throws IOException
+    public static Torrent parseTorrent(String filePath) throws Exception
     {
 	Reader r = new Reader(new File(filePath));
 	List<IBencodable> x = r.read();
 	// A valid torrentfile should only return a single dictionary.
 	if (x.size() != 1)
-	    throw new Error("Parsing .torrent yielded wrong number of bencoding structs.");
+	    throw new Exception("Parsing .torrent yielded wrong number of bencoding structs.");
 	try
 	{
 	    return parseTorrent(x.get(0));
@@ -306,7 +306,7 @@ public class TorrentParser
 	}
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
 	try
 	{

@@ -7,6 +7,7 @@ import java.util.List;
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBMgr;
 import org.papaorange.amoviesprider.model.BtttTorrentItem;
+import org.papaorange.amoviesprider.model.MagnetItem;
 import org.papaorange.amoviesprider.parser.BtttParser;
 import org.papaorange.amoviesprider.utils.DBAgent;
 
@@ -37,12 +38,17 @@ public class TorrentDownloadTask
 
 	for (Document document : documents)
 	{
+
+	    if (document.containsKey("magnets"))
+	    {
+		continue;
+	    }
 	    String imdbLink = (String) document.get("imdbLink");
 
 	    String imdbId = imdbLink.replace("http://www.imdb.com/title/", "");
 
 	    List<BtttTorrentItem> items = BtttParser.getTorrentItemsByImdbId(imdbId);
-	    List<String> magents = new ArrayList<>();
+	    List<BasicDBObject> magnets = new ArrayList<>();
 
 	    for (BtttTorrentItem item : items)
 	    {
@@ -50,17 +56,21 @@ public class TorrentDownloadTask
 
 		try
 		{
-		    String magent = "magnet:?xt=urn:btih:" + TorrentParser.parseTorrent(filePath).getInfo_hash();
-		    magents.add(magent);
+		    BasicDBObject object = new BasicDBObject();
+		    object.append("name", item.getName());
+		    object.append("link", "magnet:?xt=urn:btih:" + TorrentParser.parseTorrent(filePath).getInfo_hash());
+		    magnets.add(object);
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 		    e.printStackTrace();
 		}
 
 	    }
-
-	    agent.updateOneDocument("good", document, "magnets", new BasicDBObject().append("link", magents));
+	    if (magnets.size() > 0)
+	    {
+		agent.updateOneDocument("good", "url", document, "magnets", magnets);
+	    }
 
 	}
     }
