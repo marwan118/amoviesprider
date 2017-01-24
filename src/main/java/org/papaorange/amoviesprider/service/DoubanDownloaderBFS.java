@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.papaorange.amoviesprider.utils.DBAgent;
+import org.papaorange.amoviesprider.utils.ResDownloader;
 import org.papaorange.amoviesprider.utils.Utils;
 
 import java.util.List;

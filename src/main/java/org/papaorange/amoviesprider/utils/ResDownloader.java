@@ -1,4 +1,4 @@
-package org.papaorange.amoviesprider.service;
+package org.papaorange.amoviesprider.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
