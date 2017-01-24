@@ -8,14 +8,12 @@ import org.papaorange.amoviesprider.db.DBMgr;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItem;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItemsCollection;
 import org.papaorange.amoviesprider.utils.Utils;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 
 @Component
-@DependsOn(value="DBMgr")
 public class DoubanHotMovieDownloadTask
 {
 

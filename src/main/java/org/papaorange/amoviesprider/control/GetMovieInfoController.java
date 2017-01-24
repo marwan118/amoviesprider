@@ -6,7 +6,6 @@ import java.util.List;
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBAgent;
 import org.papaorange.amoviesprider.db.DBMgr;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mongodb.BasicDBObject;
 
 @RestController
-@DependsOn(value="DBMgr")
 public class GetMovieInfoController
 {
 
