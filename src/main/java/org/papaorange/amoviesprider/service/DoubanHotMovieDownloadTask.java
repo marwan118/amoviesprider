@@ -7,12 +7,17 @@ import org.papaorange.amoviesprider.model.DoubanHotMovieItem;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItemsCollection;
 import org.papaorange.amoviesprider.utils.DBAgent;
 import org.papaorange.amoviesprider.utils.Utils;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 
+@Component
 public class DoubanHotMovieDownloadTask
 {
 
+     @Scheduled(cron = "0 14 10 ? * *")
+//    @Scheduled(fixedRate = 1000)
     public void downloadHotMovie()
     {
 	DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
@@ -26,13 +31,12 @@ public class DoubanHotMovieDownloadTask
 	}
 	catch (IOException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 
 	Elements elems = document.getElementsByTag("body");
 	String jsonString = elems.html();
-	System.out.println(jsonString);
+	// System.out.println(jsonString);
 	DoubanHotMovieItemsCollection collection = JSON.parseObject(jsonString, DoubanHotMovieItemsCollection.class);
 
 	/*
