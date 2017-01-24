@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.papaorange.amoviesprider.dom.parser.DoubanParser;
+import org.papaorange.amoviesprider.parser.DoubanParser;
 import org.papaorange.amoviesprider.utils.DBAgent;
 import org.papaorange.amoviesprider.utils.ResDownloader;
 import org.papaorange.amoviesprider.utils.Utils;
@@ -116,7 +116,7 @@ public class DoubanDownloaderBFS
 	try
 	{
 	    Thread.sleep(500);
-	    document = Utils.download(url);
+	    document = Utils.httpGet(url);
 	}
 	catch (IOException e)
 	{
@@ -242,7 +242,7 @@ public class DoubanDownloaderBFS
 		this.agent.addOneDocument(movieItem, "good");
 		try
 		{
-		    ResDownloader.download(posterLink, path);
+		    ResDownloader.downloadMethodGet(posterLink, path);
 		}
 		catch (Exception e)
 		{

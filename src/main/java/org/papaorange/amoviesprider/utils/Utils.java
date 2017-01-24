@@ -1,10 +1,14 @@
 package org.papaorange.amoviesprider.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -13,7 +17,7 @@ public class Utils
 
     private static final Logger log = Logger.getLogger(Utils.class);
 
-    public static Document download(String url) throws IOException
+    public static Document httpGet(String url) throws IOException
     {
 	log.debug("Download URL:" + url);
 	return Jsoup.connect(url).ignoreContentType(true).header("Accept", "text/html")
@@ -22,6 +26,61 @@ public class Utils
 		.header("User-Agent",
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
 		.timeout(0).get();
+    }
+
+    public static Document httpPost(String url, Map<String, String> map, String cookie) throws IOException
+    {
+	// 获取请求连接
+	Connection con = Jsoup.connect(url);
+	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8")
+		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
+		.header("User-Agent",
+			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
+		.timeout(0);
+	// 遍历生成参数
+	if (map != null)
+	{
+	    for (Entry<String, String> entry : map.entrySet())
+	    {
+		// 添加参数
+		con.data(entry.getKey(), entry.getValue());
+	    }
+	}
+	// 插入cookie（头文件形式）
+	if (cookie != null)
+	{
+	    con.header("Cookie", cookie);
+	}
+	Document doc = con.post();
+	return doc;
+    }
+
+    public static InputStream httpPostBlob(String url, Map<String, String> map, String cookie) throws IOException
+    {
+	// 获取请求连接
+	
+	Connection con = Jsoup.connect(url);
+	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8")
+		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
+		.header("User-Agent",
+			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
+		.timeout(0);
+	// 遍历生成参数
+	if (map != null)
+	{
+	    for (Entry<String, String> entry : map.entrySet())
+	    {
+		// 添加参数
+		con.data(entry.getKey(), entry.getValue());
+	    }
+	}
+	// 插入cookie（头文件形式）
+	if (cookie != null)
+	{
+	    con.header("Cookie", cookie);
+	}
+
+	return null;
     }
 
     public static String matchYear(String str)

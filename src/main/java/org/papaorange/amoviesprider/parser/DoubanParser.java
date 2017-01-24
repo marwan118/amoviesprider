@@ -1,4 +1,4 @@
-package org.papaorange.amoviesprider.dom.parser;
+package org.papaorange.amoviesprider.parser;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
