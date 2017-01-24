@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.papaorange.amoviesprider.dom.parser.DoubanParser;
 import org.papaorange.amoviesprider.utils.DBAgent;
 import org.papaorange.amoviesprider.utils.ResDownloader;
 import org.papaorange.amoviesprider.utils.Utils;
@@ -179,7 +180,7 @@ public class DoubanDownloaderBFS
 		log.info("1990年以前电影，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
 		Hashtable<String, Object> ignoreItem = new Hashtable<>();
-		ignoreItem.put("name", getMovieNameFromHtmlDocument(document));
+		ignoreItem.put("name", DoubanParser.getMovieNameFromHtmlDocument(document));
 		ignoreItem.put("url", url);
 		ignoreItem.put("ignoreBy", "year");
 		ignoreItem.put("year", year);
@@ -193,7 +194,7 @@ public class DoubanDownloaderBFS
 		log.info("投票人数少于5000，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
 		Hashtable<String, Object> ignoreItem = new Hashtable<>();
-		ignoreItem.put("name", getMovieNameFromHtmlDocument(document));
+		ignoreItem.put("name", DoubanParser.getMovieNameFromHtmlDocument(document));
 		ignoreItem.put("url", url);
 		ignoreItem.put("ignoreBy", "rateNumber");
 		ignoreItem.put("year", year);
@@ -207,7 +208,7 @@ public class DoubanDownloaderBFS
 		log.info("评分低于6分，忽略。。。" + url);
 		this.ignoreMvMap.put(url, "");
 		Hashtable<String, Object> ignoreItem = new Hashtable<>();
-		ignoreItem.put("name", getMovieNameFromHtmlDocument(document));
+		ignoreItem.put("name", DoubanParser.getMovieNameFromHtmlDocument(document));
 		ignoreItem.put("url", url);
 		ignoreItem.put("ignoreBy", "ratevalue");
 		ignoreItem.put("year", year);
@@ -219,7 +220,7 @@ public class DoubanDownloaderBFS
 	    else
 	    {
 		Hashtable<String, Object> movieItem = new Hashtable<>();
-		String name = getMovieNameFromHtmlDocument(document);
+		String name = DoubanParser.getMovieNameFromHtmlDocument(document);
 		if (name.equals(""))
 		{
 		    return childs;
@@ -230,11 +231,11 @@ public class DoubanDownloaderBFS
 		movieItem.put("year", year);
 		movieItem.put("rateValue", ratevalue);
 		movieItem.put("rateNumber", rateNumber);
-		movieItem.put("imdbLink", getMovieIMDBLinkFromHtmlDocument(document));
-		movieItem.put("summary", getMovieSummaryFromHtmlDocument(document));
-		String posterLink = getMoviePosterLinkFromHtmlDocument(document);
+		movieItem.put("imdbLink", DoubanParser.getMovieIMDBLinkFromHtmlDocument(document));
+		movieItem.put("summary", DoubanParser.getMovieSummaryFromHtmlDocument(document));
+		String posterLink = DoubanParser.getMoviePosterLinkFromHtmlDocument(document);
 		String path = "/data/db/poster/" + posterLink.substring(posterLink.lastIndexOf("/") + 1);
-		movieItem.put("posterUrl", getMoviePosterLinkFromHtmlDocument(document));
+		movieItem.put("posterUrl", DoubanParser.getMoviePosterLinkFromHtmlDocument(document));
 		movieItem.put("posterPath", path);
 		newCollectCount++;
 		this.existMvMap.put(url, "");
@@ -283,58 +284,6 @@ public class DoubanDownloaderBFS
 	    childs.add(childUrl);
 	}
 	return childs;
-    }
-
-    private String getMovieNameFromHtmlDocument(Document doc)
-    {
-	// v:itemreviewed
-
-	String name = "";
-
-	if (doc.getElementsByAttributeValue("property", "v:itemreviewed").size() > 0)
-	{
-	    name = doc.getElementsByAttributeValue("property", "v:itemreviewed").get(0).text();
-	    if (name.contains(" "))
-	    {
-		name = name.substring(0, name.indexOf(" "));
-	    }
-	}
-	return name;
-    }
-
-    private String getMovieIMDBLinkFromHtmlDocument(Document doc)
-    {
-	String imdbLink = "";
-	Elements elems = doc.getElementsByAttributeValueContaining("href", "http://www.imdb.com/title/");
-	if (elems.size() > 0)
-	{
-	    imdbLink = elems.get(0).attr("href");
-	}
-	return imdbLink;
-    }
-
-    private String getMoviePosterLinkFromHtmlDocument(Document doc)
-    {
-	// rel="v:image"
-	String posterLink = "";
-	Elements elems = doc.getElementsByAttributeValue("rel", "v:image");
-	if (elems.size() > 0)
-	{
-	    posterLink = elems.get(0).attr("src");
-	}
-	return posterLink;
-    }
-
-    private String getMovieSummaryFromHtmlDocument(Document doc)
-    {
-	// v:summary
-	String summary = "";
-	if (doc.getElementsByAttributeValue("property", "v:summary").size() > 0)
-	{
-	    summary = doc.getElementsByAttributeValue("property", "v:summary").get(0).text();
-	}
-
-	return summary;
     }
 
     public static void main(String[] args)
