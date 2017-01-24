@@ -10,6 +10,7 @@ import org.papaorange.amoviesprider.model.BtttTorrentItem;
 import org.papaorange.amoviesprider.parser.BtttParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -17,6 +18,7 @@ import com.mongodb.BasicDBObject;
 import be.christophedetroyer.torrent.TorrentParser;
 
 @Component
+@DependsOn(value="DBMgr")
 public class TorrentDownloadTask
 {
     private DBAgent agent = null;
@@ -27,7 +29,6 @@ public class TorrentDownloadTask
 	try
 	{
 	    agent = DBMgr.getDBAgent();
-
 	}
 	catch (Exception e)
 	{

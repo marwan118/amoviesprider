@@ -1,13 +1,9 @@
 package org.papaorange.amoviesprider.app;
 
-import org.papaorange.amoviesprider.service.TorrentDownloadTask;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "org.papaorange.amoviesprider.*")
@@ -21,14 +17,14 @@ public class AMovieSpriderApplication
     }
 
 }
-
-@Component
-class StartupHousekeeper
-{
-
-    @EventListener(ContextRefreshedEvent.class)
-    void contextRefreshedEvent()
-    {
-	new TorrentDownloadTask().downloadTorrentTask();
-    }
-}
+//
+//@Component
+//class StartupHousekeeper
+//{
+//
+//    @EventListener(ContextRefreshedEvent.class)
+//    void contextRefreshedEvent()
+//    {
+//	new TorrentDownloadTask().downloadTorrentTask();
+//    }
+//}
