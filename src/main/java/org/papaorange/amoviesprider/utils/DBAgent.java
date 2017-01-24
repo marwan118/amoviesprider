@@ -110,7 +110,9 @@ public class DBAgent
 	    while (cursor.hasNext())
 	    {
 		i++;
-		result.add(cursor.next());
+		Document temp = cursor.next();
+		temp.append("imdbId", temp.get("imdbLink").toString().replaceAll("http://www.imdb.com/title/", ""));
+		result.add(temp);
 	    }
 	    this.clusterCur += i;
 	}

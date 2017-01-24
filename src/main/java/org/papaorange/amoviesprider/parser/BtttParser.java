@@ -38,7 +38,12 @@ public class BtttParser
 	Elements elements = doc.getElementsByClass("item cl");
 	if (elements.size() > 0)
 	{
-	    ret = elements.get(0).getElementsByClass("tt cl").get(0).getElementsByTag("a").attr("href");
+	    Elements temp = elements.get(0).getElementsByClass("tt cl");
+	    if (temp.size() > 0)
+	    {
+		ret = temp.get(0).getElementsByTag("a").attr("href");
+	    }
+
 	}
 	return "http://www.bttt.la" + ret;
     }
