@@ -41,10 +41,14 @@ public class TorrentDownloadTask
 	log.info("下载种子任务开始....");
 	List<Document> documents = agent.getDocuments("good",
 		new BasicDBObject().append("magnets", new BasicDBObject().append("$exists", false)));
+	int total = documents.size();
+	log.info("总计" + total + "部电影待下载Torrent...");
 
+	int i = 0;
 	for (Document document : documents)
 	{
-
+	    log.info("第(" + (i++) + "/" + total + ")部电影 : " + document.get("name") + "(" + document.get("year") + ")"
+		    + " URL: " + document.get("url"));
 	    String imdbLink = (String) document.get("imdbLink");
 
 	    String imdbId = imdbLink.replace("http://www.imdb.com/title/", "");
