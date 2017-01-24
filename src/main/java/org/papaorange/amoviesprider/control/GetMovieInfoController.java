@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.bson.Document;
-import org.papaorange.amoviesprider.utils.DBAgent;
+import org.papaorange.amoviesprider.db.DBAgent;
+import org.papaorange.amoviesprider.db.DBMgr;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,14 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mongodb.BasicDBObject;
 
 @RestController
+@DependsOn(value="DBMgr")
 public class GetMovieInfoController
 {
 
-    private DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
+    private DBAgent agent = null;
 
     public GetMovieInfoController()
     {
-	agent.connect();
+	try
+	{
+	    agent = DBMgr.getDBAgent();
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	}
     }
 
     @CrossOrigin
@@ -28,7 +38,7 @@ public class GetMovieInfoController
     {
 	return agent.findNextCluster(new BasicDBObject(), "good", 48);
     }
-    
+
     @CrossOrigin
     @RequestMapping("/reset")
     public void reset() throws IOException

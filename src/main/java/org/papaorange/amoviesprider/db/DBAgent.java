@@ -1,4 +1,4 @@
-package org.papaorange.amoviesprider.utils;
+package org.papaorange.amoviesprider.db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.papaorange.amoviesprider.service.TorrentDownloadTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
