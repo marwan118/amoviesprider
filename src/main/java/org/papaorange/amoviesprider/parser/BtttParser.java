@@ -79,10 +79,10 @@ public class BtttParser
 	return items;
     }
 
-    public static void downloadTorrent(BtttTorrentItem item)
+    public static String downloadTorrent(BtttTorrentItem item)
     {
 	String url = item.getTorrentDownloadPageUrl();
-
+	String ret = "";
 	Map<String, String> parms = item.parseQueryParamsFromDownloadUrl(url);
 	parms.put("action", "download");
 	String actionPage;
@@ -94,10 +94,15 @@ public class BtttParser
 
 	    ResDownloader.downloadMethodPost("http://www.bttt.la" + actionPage, parms,
 		    "/data/db/torrents/" + item.getName());
+	    ret = "/data/db/torrents/" + item.getName();
+	    return ret;
+
 	}
 	catch (Exception e)
 	{
 	    e.printStackTrace();
+	    return ret;
+
 	}
 
     }

@@ -59,6 +59,28 @@ public class DBAgent
 	return ret;
     }
 
+    public List<Document> getAllDocuments(String collectionName)
+    {
+	List<Document> ret = new ArrayList<>();
+	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	MongoCursor<Document> cur = collection.find().iterator();
+	while (cur.hasNext())
+	{
+	    Document document = cur.next();
+	    ret.add(document);
+	}
+	return ret;
+    }
+
+    public int updateOneDocument(String collectionName, Document ori, String toInsertKey, BasicDBObject toInsertObj)
+    {
+	int ret = 0;
+	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	collection.findOneAndUpdate(ori, ori.append(toInsertKey, toInsertObj));
+
+	return ret;
+    }
+
     public void removeDocument(Map<String, Object> doc, String collectionName, String filterName, String filterValue)
     {
 	try
