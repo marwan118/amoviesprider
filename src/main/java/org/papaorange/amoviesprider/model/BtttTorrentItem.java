@@ -11,7 +11,7 @@ public class BtttTorrentItem
 
     public String getName()
     {
-	return name.replace("/", "");
+	return name.replace("/", "").replace(" ", "");
     }
 
     public void setName(String name)

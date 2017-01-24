@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mongodb.BasicDBObject;
 
 @RestController
-public class GetMovieController
+public class GetMovieInfoController
 {
 
     private DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
 
-    public GetMovieController()
+    public GetMovieInfoController()
     {
 	agent.connect();
     }
