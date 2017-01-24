@@ -1,6 +1,5 @@
 package org.papaorange.amoviesprider.service;
 
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -8,6 +7,8 @@ import org.papaorange.amoviesprider.parser.DoubanParser;
 import org.papaorange.amoviesprider.utils.DBAgent;
 import org.papaorange.amoviesprider.utils.ResDownloader;
 import org.papaorange.amoviesprider.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.io.IOException;
@@ -27,7 +28,8 @@ public class DoubanDownloaderBFS
     private Map<String, Object> existMvMap = null;
     private Map<String, Object> ignoreMvMap = null;
     private Map<String, Object> lastTimeRemainMvMap = null;
-    private static final Logger log = Logger.getLogger(DoubanDownloaderBFS.class);
+    private final static Logger log = LoggerFactory.getLogger(DoubanDownloaderBFS.class);
+
     private int newCollectCount = 0;
 
     DoubanDownloaderBFS(String seedUrl, DBAgent agent)

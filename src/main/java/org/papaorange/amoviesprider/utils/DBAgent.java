@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.papaorange.amoviesprider.service.TorrentDownloadTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -24,7 +28,7 @@ public class DBAgent
     private MongoClient mongoClient = null;
     private MongoDatabase mongoDatabase = null;
     private int clusterCur = 0;
-    private static final Logger log = Logger.getLogger(DBAgent.class);
+    private final static Logger log = LoggerFactory.getLogger(DBAgent.class);
 
     public DBAgent(String dbAddress, int dbPort, String dbName)
     {
@@ -57,6 +61,20 @@ public class DBAgent
 	    ret.put((String) document.get(key), "");
 	}
 	return ret;
+    }
+
+    public List<Document> getDocuments(String collectionName, Bson filter)
+    {
+	List<Document> ret = new ArrayList<>();
+	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+	MongoCursor<Document> cur = collection.find(filter).iterator();
+	while (cur.hasNext())
+	{
+	    Document document = cur.next();
+	    ret.add(document);
+	}
+	return ret;
+
     }
 
     public List<Document> getAllDocuments(String collectionName)

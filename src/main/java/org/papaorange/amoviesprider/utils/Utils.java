@@ -7,15 +7,16 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Utils
 {
 
-    private static final Logger log = Logger.getLogger(Utils.class);
+    private final static Logger log = LoggerFactory.getLogger(Utils.class);
 
     public static Document httpGet(String url) throws IOException
     {
@@ -58,7 +59,7 @@ public class Utils
     public static InputStream httpPostBlob(String url, Map<String, String> map, String cookie) throws IOException
     {
 	// 获取请求连接
-	
+
 	Connection con = Jsoup.connect(url);
 	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8")
 		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")

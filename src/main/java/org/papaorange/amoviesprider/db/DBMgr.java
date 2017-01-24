@@ -1,7 +1,9 @@
 package org.papaorange.amoviesprider.db;
 
 import org.papaorange.amoviesprider.utils.DBAgent;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DBMgr
 {
 

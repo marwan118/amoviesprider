@@ -10,12 +10,13 @@ import java.net.URLConnection;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResDownloader
 {
 
-    private static final Logger log = Logger.getLogger(ResDownloader.class);
+    private final static Logger log = LoggerFactory.getLogger(ResDownloader.class);
 
     public static void downloadMethodGet(String url, String filename) throws Exception
     {

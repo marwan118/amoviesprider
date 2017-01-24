@@ -3,6 +3,7 @@ package org.papaorange.amoviesprider.service;
 import java.io.IOException;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.papaorange.amoviesprider.db.DBMgr;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItem;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItemsCollection;
 import org.papaorange.amoviesprider.utils.DBAgent;
@@ -16,11 +17,20 @@ import com.alibaba.fastjson.JSON;
 public class DoubanHotMovieDownloadTask
 {
 
-     @Scheduled(cron = "0 14 10 ? * *")
-//    @Scheduled(fixedRate = 1000)
+    @Scheduled(cron = "0 14 10 ? * *")
+    // @Scheduled(fixedRate = 1000)
     public void downloadHotMovie()
     {
-	DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
+	// DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
+	DBAgent agent = null;
+	try
+	{
+	    agent = DBMgr.getDBAgent();
+	}
+	catch (Exception e1)
+	{
+	    e1.printStackTrace();
+	}
 	agent.connect();
 	Document document = null;
 
