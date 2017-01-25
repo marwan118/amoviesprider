@@ -288,11 +288,11 @@ public class DoubanDownloaderBFS
 	return childs;
     }
 
-    public static void main(String[] args)
-    {
-	DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
-	agent.connect();
-	new DoubanDownloaderBFS(args[0], agent).collectBFS();
-	agent.close();
-    }
+    // public static void main(String[] args)
+    // {
+    // DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
+    // agent.connect();
+    // new DoubanDownloaderBFS(args[0], agent).collectBFS();
+    // agent.close();
+    // }
 }

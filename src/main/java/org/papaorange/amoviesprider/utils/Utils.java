@@ -102,8 +102,8 @@ public class Utils
 	return year;
     }
 
-    public static void main(String[] args)
-    {
-	System.out.println(matchYear("5652-12-12"));
-    }
+    // public static void main(String[] args)
+    // {
+    // System.out.println(matchYear("5652-12-12"));
+    // }
 }

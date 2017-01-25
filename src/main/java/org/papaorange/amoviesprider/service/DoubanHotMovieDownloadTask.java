@@ -61,9 +61,9 @@ public class DoubanHotMovieDownloadTask
 	agent.close();
     }
 
-    public static void main(String[] args)
-    {
-	new DoubanHotMovieDownloadTask().downloadHotMovie();
-    }
+    // public static void main(String[] args)
+    // {
+    // new DoubanHotMovieDownloadTask().downloadHotMovie();
+    // }
 
 }

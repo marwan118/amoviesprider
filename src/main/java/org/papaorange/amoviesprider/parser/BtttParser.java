@@ -106,13 +106,13 @@ public class BtttParser
 	}
 
     }
-
-    public static void main(String[] args)
-    {
-	List<BtttTorrentItem> items = BtttParser.getTorrentItemsByImdbId("tt1603807");
-	for (BtttTorrentItem btttTorrentItem : items)
-	{
-	    downloadTorrent(btttTorrentItem);
-	}
-    }
+//
+//    public static void main(String[] args)
+//    {
+//	List<BtttTorrentItem> items = BtttParser.getTorrentItemsByImdbId("tt1603807");
+//	for (BtttTorrentItem btttTorrentItem : items)
+//	{
+//	    downloadTorrent(btttTorrentItem);
+//	}
+//    }
 }

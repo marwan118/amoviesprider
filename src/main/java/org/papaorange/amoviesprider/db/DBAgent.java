@@ -187,25 +187,26 @@ public class DBAgent
 	return ret;
     }
 
-    public static void main(String[] args)
-    {
-	DBAgent agent = new DBAgent("192.168.1.100", 27017, "movie");
-	agent.connect();
-	int i = 0;
-	while (true)
-	{
-	    List<Document> documents = agent.findNextCluster(
-		    new BasicDBObject().append("rateValue", new BasicDBObject().append("$gte", 8)), "good", 50);
-	    if (documents.size() == 0)
-	    {
-		break;
-	    }
-	    for (Document document : documents)
-	    {
-		System.out.println(i++ + ":" + document);
-	    }
-	    System.out.println();
-	}
-	agent.close();
-    }
+    // public static void main(String[] args)
+    // {
+    // DBAgent agent = new DBAgent("192.168.1.100", 27017, "movie");
+    // agent.connect();
+    // int i = 0;
+    // while (true)
+    // {
+    // List<Document> documents = agent.findNextCluster(
+    // new BasicDBObject().append("rateValue", new
+    // BasicDBObject().append("$gte", 8)), "good", 50);
+    // if (documents.size() == 0)
+    // {
+    // break;
+    // }
+    // for (Document document : documents)
+    // {
+    // System.out.println(i++ + ":" + document);
+    // }
+    // System.out.println();
+    // }
+    // agent.close();
+    // }
 }
