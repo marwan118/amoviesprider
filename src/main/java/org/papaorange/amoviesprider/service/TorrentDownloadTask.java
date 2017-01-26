@@ -20,11 +20,13 @@ import be.christophedetroyer.torrent.TorrentParser;
 @Component
 public class TorrentDownloadTask
 {
-    private DBAgent agent = null;
     private final static Logger log = LoggerFactory.getLogger(TorrentDownloadTask.class);
 
-    public TorrentDownloadTask()
+    @Scheduled(cron = "0 1 3 ? * *")
+    public void downloadTorrentTask()
     {
+	DBAgent agent = null;
+
 	try
 	{
 	    agent = DBMgr.getDBAgent();
@@ -33,11 +35,7 @@ public class TorrentDownloadTask
 	{
 	    e.printStackTrace();
 	}
-    }
 
-    @Scheduled(cron = "0 1 3 ? * *")
-    public void downloadTorrentTask()
-    {
 	log.info("下载种子任务开始....");
 	List<Document> documents = agent.getDocuments("good",
 		new BasicDBObject().append("magnets", new BasicDBObject().append("$exists", false)));
@@ -80,9 +78,4 @@ public class TorrentDownloadTask
 
 	}
     }
-
-    // public static void main(String[] args)
-    // {
-    // new TorrentDownloadTask().downloadTorrentTask();
-    // }
 }

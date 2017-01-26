@@ -17,12 +17,10 @@ import com.alibaba.fastjson.JSON;
 public class DoubanHotMovieDownloadTask
 {
 
-    @Scheduled(cron = "0 14 10 ? * *")
-    // @Scheduled(fixedRate = 1000)
-    public void downloadHotMovie()
+    public void downloadMovieWithSeed(String url)
     {
-	// DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
 	DBAgent agent = null;
+
 	try
 	{
 	    agent = DBMgr.getDBAgent();
@@ -31,7 +29,22 @@ public class DoubanHotMovieDownloadTask
 	{
 	    e1.printStackTrace();
 	}
-	agent.connect();
+	new DoubanDownloaderBFS(url, agent).collectBFS();
+    }
+
+    @Scheduled(cron = "0 14 10 ? * *")
+    public void downloadHotMovie()
+    {
+	DBAgent agent = null;
+
+	try
+	{
+	    agent = DBMgr.getDBAgent();
+	}
+	catch (Exception e1)
+	{
+	    e1.printStackTrace();
+	}
 	Document document = null;
 
 	try
@@ -58,7 +71,6 @@ public class DoubanHotMovieDownloadTask
 	    String url = item.getUrl();
 	    new DoubanDownloaderBFS(url, agent).collectBFS();
 	}
-	agent.close();
     }
 
     // public static void main(String[] args)
