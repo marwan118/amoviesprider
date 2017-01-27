@@ -28,7 +28,7 @@ public class GetMovieTorrentController
 	    BtttParser.downloadTorrent(btttItem);
 	    TorrentItem temp = new TorrentItem();
 	    temp.setImdbId(imdbId);
-	    temp.setUrl("http://192.168.1.100:8889/" + btttItem.getName());
+	    temp.setUrl("http://papaorange.org:8889/" + btttItem.getName());
 	    torrentItems.add(temp);
 	}
 

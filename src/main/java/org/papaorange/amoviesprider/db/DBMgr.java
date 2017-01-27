@@ -14,7 +14,7 @@ public class DBMgr
 	}
 	else
 	{
-	    agent = new DBAgent("192.168.1.100", 27017, "movie");
+	    agent = new DBAgent("papaorange.org", 27017, "movie");
 	    agent.connect();
 	    if (agent == null)
 	    {

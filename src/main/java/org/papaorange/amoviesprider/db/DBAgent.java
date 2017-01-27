@@ -143,14 +143,22 @@ public class DBAgent
 	}
     }
 
-    public List<Document> findNextCluster(BasicDBObject condiction, String collectionName, int clusterSize)
+    public List<Document> findNextCluster(BasicDBObject condiction, String collectionName, int clusterSize,
+	    boolean sort, BasicDBObject sortby)
     {
 	List<Document> result = new ArrayList<>();
 	try
 	{
 	    MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
-	    MongoCursor<Document> cursor = collection.find(condiction).skip(this.clusterCur).limit(clusterSize)
-		    .iterator();
+	    MongoCursor<Document> cursor = null;
+	    if (sort == true)
+	    {
+		cursor = collection.find(condiction).skip(this.clusterCur).limit(clusterSize).sort(sortby).iterator();
+	    }
+	    else
+	    {
+		cursor = collection.find(condiction).skip(this.clusterCur).limit(clusterSize).iterator();
+	    }
 	    int i = 0;
 	    while (cursor.hasNext())
 	    {

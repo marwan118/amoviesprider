@@ -1,6 +1,7 @@
 package org.papaorange.amoviesprider.control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
@@ -34,10 +35,19 @@ public class GetMovieInfoController
     }
 
     @CrossOrigin
-    @RequestMapping("/nextcluster")
-    public List<Document> getMovie() throws IOException
+    @RequestMapping(value = "/nextcluster", params = { "sort=nuovoprodotto", "sort=salvaprodotto" })
+    public List<Document> getMovie(@RequestParam("sort") String sort) throws IOException
     {
-	return agent.findNextCluster(new BasicDBObject(), "good", 48);
+	List<Document> ret = new ArrayList<>();
+	if (sort.equals("lastest"))
+	{
+	    ret = agent.findNextCluster(new BasicDBObject(), "good", 48, true, new BasicDBObject("_id", -1));
+	}
+	else if (sort.equals("oldest"))
+	{
+	    ret = agent.findNextCluster(new BasicDBObject(), "good", 48, true, new BasicDBObject("_id", 1));
+	}
+	return ret;
     }
 
     @CrossOrigin
