@@ -39,7 +39,7 @@ public class GetMovieInfoController
     public List<Document> getMovie(@RequestParam("sort") String sort) throws IOException
     {
 	List<Document> ret = new ArrayList<>();
-	if (sort.equals("lastest"))
+	if (sort.equals("latest"))
 	{
 	    ret = agent.findNextCluster(new BasicDBObject(), "good", 48, true, new BasicDBObject("_id", -1));
 	}
