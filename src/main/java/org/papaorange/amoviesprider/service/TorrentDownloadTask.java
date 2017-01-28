@@ -26,16 +26,7 @@ public class TorrentDownloadTask
     public void downloadTorrentTask()
     {
 	DBAgent agent = null;
-
-	try
-	{
-	    agent = DBMgr.getDBAgent();
-	}
-	catch (Exception e)
-	{
-	    e.printStackTrace();
-	}
-
+	agent = DBMgr.getDBAgent();
 	log.info("下载种子任务开始....");
 	List<Document> documents = agent.getDocuments("good",
 		new BasicDBObject().append("magnets", new BasicDBObject().append("$exists", false)));
@@ -45,42 +36,47 @@ public class TorrentDownloadTask
 	int i = 0;
 	for (Document document : documents)
 	{
+
 	    log.info("第(" + (i++) + "/" + total + ")部电影 : " + document.get("name") + "(" + document.get("year") + ")"
 		    + " URL: " + document.get("url"));
-	    String imdbLink = (String) document.get("imdbLink");
-
-	    String imdbId = imdbLink.replace("http://www.imdb.com/title/", "");
-
-	    List<BtttTorrentItem> items = BtttParser.getTorrentItemsByImdbId(imdbId);
-	    List<BasicDBObject> magnets = new ArrayList<>();
-
-	    for (BtttTorrentItem item : items)
+	    if (agent.getDocuments("torrents", new BasicDBObject().append("url", document.get("url"))).size() > 0)
 	    {
-		String filePath = BtttParser.downloadTorrent(item);
-
-		try
-		{
-		    BasicDBObject object = new BasicDBObject();
-		    object.append("name", item.getName());
-		    object.append("link", "magnet:?xt=urn:btih:" + TorrentParser.parseTorrent(filePath).getInfo_hash());
-		    magnets.add(object);
-		}
-		catch (Exception e)
-		{
-		    log.error("出现错误,忽略该Torrent:" + item.getName() + " ErrorMsg:" + e.getMessage());
-		}
-
+		continue;
 	    }
-	    Document newDoc = new Document();
-	    newDoc.append("url", document.getString("url"));
-	    newDoc.append("magnets", magnets);
-	    if (magnets.size() > 0)
+	    agent.addOneDocument(downlaodTorrentAndParseMagnetUsingMovieInfo(document), "torrents");
+	}
+    }
+
+    public static Document downlaodTorrentAndParseMagnetUsingMovieInfo(Document document)
+    {
+
+	String imdbLink = (String) document.get("imdbLink");
+
+	String imdbId = imdbLink.replace("http://www.imdb.com/title/", "");
+
+	List<BtttTorrentItem> items = BtttParser.getTorrentItemsByImdbId(imdbId);
+	List<BasicDBObject> magnets = new ArrayList<>();
+
+	for (BtttTorrentItem item : items)
+	{
+	    String filePath = BtttParser.downloadTorrent(item);
+
+	    try
 	    {
-		agent.addOneDocument(newDoc, "torrents");
-		// agent.updateOneDocument("torrents", "url", document,
-		// "magnets", magnets);
+		BasicDBObject object = new BasicDBObject();
+		object.append("name", item.getName());
+		object.append("link", "magnet:?xt=urn:btih:" + TorrentParser.parseTorrent(filePath).getInfo_hash());
+		magnets.add(object);
+	    }
+	    catch (Exception e)
+	    {
+		log.error("出现错误,忽略该Torrent:" + item.getName() + " ErrorMsg:" + e.getMessage());
 	    }
 
 	}
+	Document newDoc = new Document();
+	newDoc.append("url", document.getString("url"));
+	newDoc.append("magnets", magnets);
+	return newDoc;
     }
 }

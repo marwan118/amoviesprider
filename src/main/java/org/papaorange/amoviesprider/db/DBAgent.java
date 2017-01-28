@@ -43,11 +43,6 @@ public class DBAgent
 	log.info("连接到数据库:" + dbAddress + ":" + dbPort + "/" + dbName);
     }
 
-    public void close()
-    {
-	this.mongoClient.close();
-    }
-
     public Map<String, Object> getAllDocumentsKey(String collectionName, String key)
     {
 	Map<String, Object> ret = new HashMap<>();

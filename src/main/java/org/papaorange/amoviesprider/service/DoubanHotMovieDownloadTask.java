@@ -21,14 +21,8 @@ public class DoubanHotMovieDownloadTask
     {
 	DBAgent agent = null;
 
-	try
-	{
-	    agent = DBMgr.getDBAgent();
-	}
-	catch (Exception e1)
-	{
-	    e1.printStackTrace();
-	}
+	agent = DBMgr.getDBAgent();
+
 	new DoubanDownloaderBFS(url, agent).collectBFS();
     }
 
@@ -37,14 +31,8 @@ public class DoubanHotMovieDownloadTask
     {
 	DBAgent agent = null;
 
-	try
-	{
-	    agent = DBMgr.getDBAgent();
-	}
-	catch (Exception e1)
-	{
-	    e1.printStackTrace();
-	}
+	agent = DBMgr.getDBAgent();
+
 	Document document = null;
 
 	try

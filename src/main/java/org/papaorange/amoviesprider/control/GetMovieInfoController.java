@@ -30,14 +30,7 @@ public class GetMovieInfoController
 
     public GetMovieInfoController()
     {
-	try
-	{
-	    agent = DBMgr.getDBAgent();
-	}
-	catch (Exception e)
-	{
-	    e.printStackTrace();
-	}
+	agent = DBMgr.getDBAgent();
     }
 
     @CrossOrigin
@@ -59,8 +52,8 @@ public class GetMovieInfoController
 	}
 	if (gteORlte.equals("gte"))
 	{
-	    ret = agent.findNextCluster(new BasicDBObject("rateValue", new BasicDBObject("$gte", ratevalue)), "good", count,
-		    true, new BasicDBObject("_id", sortOrder));
+	    ret = agent.findNextCluster(new BasicDBObject("rateValue", new BasicDBObject("$gte", ratevalue)), "good",
+		    count, true, new BasicDBObject("_id", sortOrder));
 	}
 	else if (gteORlte.equals("lte"))
 	{

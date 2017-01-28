@@ -303,6 +303,5 @@ public class DoubanDownloaderBFS
 	agent.connect();
 	new DoubanDownloaderBFS("https://movie.douban.com/subject/1437342/", agent)
 		.processOneMovie("https://movie.douban.com/subject/1437342/");
-	agent.close();
     }
 }
