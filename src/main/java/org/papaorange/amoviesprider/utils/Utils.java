@@ -84,6 +84,7 @@ public class Utils
 	return null;
     }
 
+    // eg:2016
     public static String matchYear(String str)
     {
 	String year = "";
@@ -100,6 +101,25 @@ public class Utils
 	{
 	}
 	return year;
+    }
+
+    // eg:2016-01-23
+    public static String matchDate(String dateStr)
+    {
+	String date = "";
+	try
+	{
+	    Pattern p = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+	    Matcher matcher = p.matcher(dateStr);
+	    while (matcher.find())
+	    {
+		date = matcher.group();
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+	return date;
     }
 
     // public static void main(String[] args)

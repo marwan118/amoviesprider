@@ -203,6 +203,7 @@ public class DoubanDownloaderBFS
 		ignoreItem.put("rateNumber", rateNumber);
 		ignoreItem.put("rateValue", ratevalue);
 		agent.addOneDocument(ignoreItem, "ignore");
+
 		return childs;
 	    }
 	    else if (ratevalue < 6)
@@ -239,6 +240,13 @@ public class DoubanDownloaderBFS
 		String path = "/data/db/poster/" + posterLink.substring(posterLink.lastIndexOf("/") + 1);
 		movieItem.put("posterUrl", DoubanParser.getMoviePosterLinkFromHtmlDocument(document));
 		movieItem.put("posterPath", path);
+		movieItem.put("release", DoubanParser.getMovieReleaseInfoFromHtmlDoucument(document));
+		movieItem.put("country", DoubanParser.getMovieProduceCountryFromHtmlDocument(document));
+		movieItem.put("runtime", DoubanParser.getMovieRuntimeFromHtmlDocument(document));
+		movieItem.put("category", DoubanParser.getMovieCategoryFromHtmlDocument(document));
+		movieItem.put("language", DoubanParser.getMovieLanguageFromHtmlDocument(document));
+		movieItem.put("alias", DoubanParser.getMovieAliasFromHtmlDocument(document));
+
 		newCollectCount++;
 		this.existMvMap.put(url, "");
 		this.agent.addOneDocument(movieItem, "good");
@@ -288,11 +296,12 @@ public class DoubanDownloaderBFS
 	return childs;
     }
 
-    // public static void main(String[] args)
-    // {
-    // DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
-    // agent.connect();
-    // new DoubanDownloaderBFS(args[0], agent).collectBFS();
-    // agent.close();
-    // }
+    public static void main(String[] args)
+    {
+	DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
+	agent.connect();
+	new DoubanDownloaderBFS("http://movie.douban.com/subject/26051524", agent)
+		.processOneMovie("http://movie.douban.com/subject/26051524");
+	agent.close();
+    }
 }
