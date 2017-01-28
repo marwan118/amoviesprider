@@ -1,5 +1,6 @@
 package org.papaorange.amoviesprider.parser;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,11 +90,13 @@ public class BtttParser
 	try
 	{
 	    actionPage = Utils.httpGet(url).getElementsByTag("form").attr("action");
-	    // String path = "/data/db/poster/" +
-	    // posterLink.substring(posterLink.lastIndexOf("/") + 1);
 
-	    ResDownloader.downloadMethodPost("http://www.bttt.la" + actionPage, parms,
-		    "/data/db/torrents/" + item.getName());
+	    if (new File("/data/db/torrents/" + item.getName()).exists() == false)
+	    {
+		ResDownloader.downloadMethodPost("http://www.bttt.la" + actionPage, parms,
+			"/data/db/torrents/" + item.getName());
+	    }
+
 	    ret = "/data/db/torrents/" + item.getName();
 	    return ret;
 

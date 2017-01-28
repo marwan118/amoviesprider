@@ -7,6 +7,7 @@ import java.util.List;
 import org.papaorange.amoviesprider.model.BtttTorrentItem;
 import org.papaorange.amoviesprider.model.TorrentItem;
 import org.papaorange.amoviesprider.parser.BtttParser;
+import org.papaorange.amoviesprider.service.TorrentDownloadTask;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ public class GetMovieTorrentController
 {
     @CrossOrigin
     @RequestMapping("/torrent/{imdbId}")
-    public List<TorrentItem> getMovie(@PathVariable String imdbId) throws IOException
+    public List<TorrentItem> getMovieTorrentByImdbId(@PathVariable String imdbId) throws IOException
     {
 	List<TorrentItem> torrentItems = new ArrayList<>();
 
@@ -34,4 +35,12 @@ public class GetMovieTorrentController
 
 	return torrentItems;
     }
+
+    @CrossOrigin
+    @RequestMapping("/torrent/taskstart")
+    public void startDownloadTorrentTask() throws IOException
+    {
+	new TorrentDownloadTask().downloadTorrentTask();
+    }
+
 }

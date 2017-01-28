@@ -71,9 +71,14 @@ public class TorrentDownloadTask
 		}
 
 	    }
+	    Document newDoc = new Document();
+	    newDoc.append("url", document.getString("url"));
+	    newDoc.append("magnets", magnets);
 	    if (magnets.size() > 0)
 	    {
-		agent.updateOneDocument("good", "url", document, "magnets", magnets);
+		agent.addOneDocument(newDoc, "torrents");
+		// agent.updateOneDocument("torrents", "url", document,
+		// "magnets", magnets);
 	    }
 
 	}
