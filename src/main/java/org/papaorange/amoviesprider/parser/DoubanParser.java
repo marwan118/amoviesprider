@@ -56,13 +56,34 @@ public class DoubanParser
 	{
 	    String releaseInfoStr = elem.attr("content");
 
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    SimpleDateFormat sdf = null;
+	    String releaseDateStr = releaseInfoStr;
+	    if (releaseInfoStr.contains("("))
+	    {
+		releaseDateStr = releaseInfoStr.substring(0, releaseInfoStr.indexOf("("));
+	    }
+	    if (releaseDateStr.length() > 7)
+	    {
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    }
+	    else if (releaseDateStr.length() > 5)
+	    {
+		sdf = new SimpleDateFormat("yyyy-MM");
+	    }
+	    else
+	    {
+		sdf = new SimpleDateFormat("yyyy");
+	    }
 
 	    MovieReleaseInfo releaseInfo = new MovieReleaseInfo();
-
 	    try
 	    {
-		releaseInfo.setReleaseDate(sdf.parse(Utils.matchDate(releaseInfoStr)));
+
+		// releaseDateStr = Utils.matchDate(releaseInfoStr).equals("") ?
+		// releaseDateStr
+		// : Utils.matchDate(releaseDateStr);
+
+		releaseInfo.setReleaseDate(sdf.parse(releaseDateStr));
 	    }
 	    catch (ParseException e)
 	    {
@@ -71,10 +92,10 @@ public class DoubanParser
 	    }
 
 	    String location = null;
-	    
-	    if(releaseInfoStr.contains("("))
+
+	    if (releaseInfoStr.contains("("))
 	    {
-		location = releaseInfoStr.substring(releaseInfoStr.indexOf("(") + 1, releaseInfoStr.indexOf(")"));
+		location = releaseInfoStr.substring(releaseInfoStr.indexOf("(") + 1, releaseInfoStr.indexOf(")")==-1?releaseInfoStr.length():releaseInfoStr.indexOf(")"));
 	    }
 	    else
 	    {
@@ -153,11 +174,24 @@ public class DoubanParser
     {
 
 	// v:runtime
+	String ret = "";
+	List<String> runtime = doc.getElementsByAttributeValue("property", "v:runtime").stream()
+		.map(x -> x.attr("content")).collect(Collectors.toList());
+	if (runtime.size() > 0)
+	{
+	    ret = runtime.iterator().next();
+	}
+	else
+	{
+	    List<Node> runtimeNode = doc.getElementsByClass("pl").stream().filter(x -> x.html().equals("片长:"))
+		    .map(x -> x.nextSibling()).collect(Collectors.toList());
+	    for (Node node : runtimeNode)
+	    {
+		ret = Utils.matchRuntime(node.toString());
+	    }
+	}
 
-	String runtime = doc.getElementsByAttributeValue("property", "v:runtime").stream().map(x -> x.attr("content"))
-		.collect(Collectors.toList()).iterator().next();
-
-	return runtime;
+	return ret;
     }
 
     public static List<String> getMovieAliasFromHtmlDocument(Document doc)
@@ -177,7 +211,8 @@ public class DoubanParser
 		ret.add(node.replace("[", "").replace("]", "").trim());
 	    }
 	}
-	else {
+	else
+	{
 	    ret.add(aliasString.replace("[", "").replace("]", "").trim());
 	}
 

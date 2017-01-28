@@ -22,8 +22,7 @@ public class Utils
     {
 	log.debug("Download URL:" + url);
 	return Jsoup.connect(url).ignoreContentType(true).header("Accept", "text/html")
-		.header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip")
-		.header("Accept-Language", "en-US,en")
+		.header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip").header("Accept-Language", "zh-cn")
 		.header("User-Agent",
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
 		.timeout(0).get();
@@ -35,8 +34,7 @@ public class Utils
 	Connection con = Jsoup.connect(url);
 	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8")
 		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
-		.header("User-Agent",
-			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
+		.header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0")
 		.timeout(0);
 	// 遍历生成参数
 	if (map != null)
@@ -82,6 +80,25 @@ public class Utils
 	}
 
 	return null;
+    }
+
+    // eg:129
+    public static String matchRuntime(String str)
+    {
+	String runtime = "";
+	try
+	{
+	    Pattern p = Pattern.compile("[0-9]+");
+	    Matcher matcher = p.matcher(str);
+	    while (matcher.find())
+	    {
+		runtime = matcher.group();
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+	return runtime;
     }
 
     // eg:2016

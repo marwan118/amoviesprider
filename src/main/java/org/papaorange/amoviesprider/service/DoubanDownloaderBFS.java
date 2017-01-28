@@ -118,7 +118,7 @@ public class DoubanDownloaderBFS
 	List<String> childs = new ArrayList<>();
 	try
 	{
-	    Thread.sleep(500);
+	    Thread.sleep(400);
 	    document = Utils.httpGet(url);
 	}
 	catch (IOException e)
@@ -301,8 +301,8 @@ public class DoubanDownloaderBFS
     {
 	DBAgent agent = new DBAgent("papaorange.org", 27017, "movie");
 	agent.connect();
-	new DoubanDownloaderBFS("http://movie.douban.com/subject/26051524", agent)
-		.processOneMovie("http://movie.douban.com/subject/26051524");
+	new DoubanDownloaderBFS("https://movie.douban.com/subject/1437342/", agent)
+		.processOneMovie("https://movie.douban.com/subject/1437342/");
 	agent.close();
     }
 }
