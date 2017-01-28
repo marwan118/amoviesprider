@@ -47,9 +47,9 @@ public class GetMovieInfoController
 	    @PathVariable("count") int count) throws IOException
     {
 	List<Document> ret = new ArrayList<>();
-
 	int sortOrder = 1;
 	if (sort.equals("latest"))
+
 	{
 	    sortOrder = -1;
 	}

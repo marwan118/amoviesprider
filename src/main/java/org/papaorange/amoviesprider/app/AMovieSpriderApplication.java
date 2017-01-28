@@ -17,14 +17,3 @@ public class AMovieSpriderApplication
     }
 
 }
-//
-//@Component
-//class StartupHousekeeper
-//{
-//
-//    @EventListener(ContextRefreshedEvent.class)
-//    void contextRefreshedEvent()
-//    {
-//	new TorrentDownloadTask().downloadTorrentTask();
-//    }
-//}
