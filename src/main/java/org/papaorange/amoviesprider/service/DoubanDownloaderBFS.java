@@ -112,6 +112,7 @@ public class DoubanDownloaderBFS
 
     private List<String> processOneMovie(String url)
     {
+	log.info("开始解析电影:url=" + url);
 
 	Document document = null;
 	List<String> childs = new ArrayList<>();

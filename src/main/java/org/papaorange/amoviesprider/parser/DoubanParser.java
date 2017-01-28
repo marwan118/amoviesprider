@@ -70,7 +70,16 @@ public class DoubanParser
 		continue;
 	    }
 
-	    String location = releaseInfoStr.substring(releaseInfoStr.indexOf("(") + 1, releaseInfoStr.indexOf(")"));
+	    String location = null;
+	    
+	    if(releaseInfoStr.contains("("))
+	    {
+		location = releaseInfoStr.substring(releaseInfoStr.indexOf("(") + 1, releaseInfoStr.indexOf(")"));
+	    }
+	    else
+	    {
+		location = "未知";
+	    }
 
 	    releaseInfo.setLocation(location);
 
@@ -96,6 +105,10 @@ public class DoubanParser
 		ret.add(node.replace("[", "").replace("]", "").trim());
 	    }
 	}
+	else
+	{
+	    ret.add(countryString.replace("[", "").replace("]", "").trim());
+	}
 
 	return ret;
     }
@@ -115,6 +128,11 @@ public class DoubanParser
 	    {
 		ret.add(node.replace("[", "").replace("]", "").trim());
 	    }
+	}
+	else
+	{
+
+	    ret.add(languagesString.replace("[", "").replace("]", "").trim());
 	}
 
 	return ret;
@@ -159,10 +177,13 @@ public class DoubanParser
 		ret.add(node.replace("[", "").replace("]", "").trim());
 	    }
 	}
+	else {
+	    ret.add(aliasString.replace("[", "").replace("]", "").trim());
+	}
 
 	return ret;
     }
-    
+
     public static String getMoviePosterLinkFromHtmlDocument(Document doc)
     {
 	// rel="v:image"
