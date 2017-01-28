@@ -95,7 +95,8 @@ public class DoubanParser
 
 	    if (releaseInfoStr.contains("("))
 	    {
-		location = releaseInfoStr.substring(releaseInfoStr.indexOf("(") + 1, releaseInfoStr.indexOf(")")==-1?releaseInfoStr.length():releaseInfoStr.indexOf(")"));
+		location = releaseInfoStr.substring(releaseInfoStr.indexOf("(") + 1,
+			releaseInfoStr.indexOf(")") == -1 ? releaseInfoStr.length() : releaseInfoStr.indexOf(")"));
 	    }
 	    else
 	    {
@@ -170,16 +171,17 @@ public class DoubanParser
 	return categorys;
     }
 
-    public static String getMovieRuntimeFromHtmlDocument(Document doc)
+    public static int getMovieRuntimeFromHtmlDocument(Document doc)
     {
 
 	// v:runtime
-	String ret = "";
+	int ret = -1;
+	String runtimeStr = "";
 	List<String> runtime = doc.getElementsByAttributeValue("property", "v:runtime").stream()
 		.map(x -> x.attr("content")).collect(Collectors.toList());
 	if (runtime.size() > 0)
 	{
-	    ret = runtime.iterator().next();
+	    runtimeStr = runtime.iterator().next();
 	}
 	else
 	{
@@ -187,8 +189,13 @@ public class DoubanParser
 		    .map(x -> x.nextSibling()).collect(Collectors.toList());
 	    for (Node node : runtimeNode)
 	    {
-		ret = Utils.matchRuntime(node.toString());
+		runtimeStr = Utils.matchRuntime(node.toString());
 	    }
+	}
+
+	if (!runtimeStr.equals(""))
+	{
+	    ret = Integer.parseInt(runtimeStr);
 	}
 
 	return ret;
