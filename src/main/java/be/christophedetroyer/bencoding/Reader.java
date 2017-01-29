@@ -34,7 +34,7 @@ public class Reader
      * and adds them to the list to finally return them.
      *
      * @return List<Object> containing all the parsed bencoded objects.
-     * @throws Exception 
+     * @throws Exception
      */
     public synchronized List<IBencodable> read() throws Exception
     {
@@ -54,7 +54,7 @@ public class Reader
      *
      * @return Returns an Object that represents either BByteString,
      *         BDictionary, BInt or BList.
-     * @throws Exception 
+     * @throws Exception
      */
     private IBencodable readSingleType() throws Exception
     {
@@ -96,7 +96,7 @@ public class Reader
      * separators between elements.
      *
      * @return BList object.
-     * @throws Exception 
+     * @throws Exception
      */
     private BList readList() throws Exception
     {
@@ -127,7 +127,7 @@ public class Reader
      * sequence.
      *
      * @return BByteString
-     * @throws Exception 
+     * @throws Exception
      */
     private BByteString readByteString() throws Exception
     {
@@ -172,7 +172,7 @@ public class Reader
      * spaces: d 3:bar 4:spam 3:foo i42e e.)
      *
      * @return BDictionary representing the dictionary.
-     * @throws Exception 
+     * @throws Exception
      */
     private BDictionary readDictionary() throws Exception
     {
@@ -204,7 +204,7 @@ public class Reader
      * zero is not permitted.
      *
      * @return BInt representing the value of the parsed integer.
-     * @throws Exception 
+     * @throws Exception
      */
     private BInt readInteger() throws Exception
     {
@@ -217,7 +217,7 @@ public class Reader
 	// They are represented as ASCII numbers.
 	String intString = "";
 	byte current = readCurrentByte();
-	while (current >= 48 && current <= 57)
+	while (current >= 48 && current <= 57 || current == 45)
 	{
 	    intString = intString + Character.toString((char) current);
 	    currentByteIndex++;
