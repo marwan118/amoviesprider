@@ -5,6 +5,7 @@ import be.christophedetroyer.bencoding.Utils;
 import be.christophedetroyer.bencoding.types.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -305,17 +306,17 @@ public class TorrentParser
 	}
     }
 
-    // public static void main(String[] args) throws Exception
-    // {
-    // try
-    // {
-    // Torrent torrent = parseTorrent(
-    // "/data/db/torrents/【BluRay720p】蝙蝠侠：黑暗骑士归来(上)Batman:TheDarkKnightReturns,Part1.2012.2.91GB.torrent");
-    // System.out.println(torrent.getInfo_hash());
-    // }
-    // catch (IOException e)
-    // {
-    // e.printStackTrace();
-    // }
-    // }
+    public static void main(String[] args) throws Exception
+    {
+	try
+	{
+	    Torrent torrent = parseTorrent(
+		    "/home/papaorange/桌面/【720p高清】007：大破天幕杀机Skyfall.2012.1.05GB.torrent");
+	    System.out.println(torrent.getInfo_hash());
+	}
+	catch (IOException e)
+	{
+	    e.printStackTrace();
+	}
+    }
 }

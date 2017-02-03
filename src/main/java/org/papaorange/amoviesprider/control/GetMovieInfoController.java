@@ -7,6 +7,7 @@ import java.util.List;
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBAgent;
 import org.papaorange.amoviesprider.db.DBMgr;
+import org.papaorange.amoviesprider.service.DoubanDownloaderBFS;
 import org.papaorange.amoviesprider.service.DoubanHotMovieDownloadTask;
 import org.papaorange.amoviesprider.service.TorrentDownloadTask;
 import org.slf4j.Logger;
@@ -108,7 +109,7 @@ public class GetMovieInfoController
     {
 	if (seeUrl != null)
 	{
-	    new DoubanHotMovieDownloadTask().downloadHotMovie();
+	    new DoubanDownloaderBFS(seeUrl, agent).collectBFS();
 	}
     }
 

@@ -32,7 +32,7 @@ public class DoubanDownloaderBFS
 
     private int newCollectCount = 0;
 
-    DoubanDownloaderBFS(String seedUrl, DBAgent agent)
+    public DoubanDownloaderBFS(String seedUrl, DBAgent agent)
     {
 	this.seedUrl = urlUnify(seedUrl);
 	this.agent = agent;
