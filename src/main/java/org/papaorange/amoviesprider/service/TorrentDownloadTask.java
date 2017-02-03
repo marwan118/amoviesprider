@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.jmx.Agent;
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBAgent;
 import org.papaorange.amoviesprider.db.DBMgr;
