@@ -12,7 +12,6 @@ import org.papaorange.amoviesprider.model.BtttTorrentItem;
 import org.papaorange.amoviesprider.parser.BtttParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
@@ -24,7 +23,7 @@ public class TorrentDownloadTask
 {
     private final static Logger log = LoggerFactory.getLogger(TorrentDownloadTask.class);
 
-    @Scheduled(cron = "0 1 3 ? * *")
+    // @Scheduled(cron = "0 1 3 ? * *")
     public void downloadTorrentTask()
     {
 	DBAgent agent = null;

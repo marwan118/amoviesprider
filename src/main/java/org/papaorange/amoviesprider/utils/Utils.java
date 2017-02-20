@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.papaorange.amoviesprider.proxy.ProxyProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +21,13 @@ public class Utils
     public static Document httpGet(String url) throws IOException
     {
 	log.debug("Download URL:" + url);
-	String proxy = new ProxyProvider().getRandomProxy();
+	// String proxy = new ProxyProvider().getRandomProxy();
 
-	String ip = proxy.substring(0, proxy.indexOf(":"));
-	Integer port = Integer.parseInt(proxy.substring(proxy.indexOf(":") + 1));
+	// String ip = proxy.substring(0, proxy.indexOf(":"));
+	// Integer port = Integer.parseInt(proxy.substring(proxy.indexOf(":") +
+	// 1));
 	return Jsoup.connect(url).ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip").header("Accept-Language", "zh-cn")
-		.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22").timeout(0).proxy(ip, port).get();
+		.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22").timeout(0).get();
     }
 
     public static Document httpPost(String url, Map<String, String> map, String cookie) throws IOException
