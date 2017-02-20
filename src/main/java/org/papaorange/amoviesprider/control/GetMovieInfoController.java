@@ -31,13 +31,12 @@ public class GetMovieInfoController
 
     public GetMovieInfoController()
     {
-	agent = DBMgr.getDBAgent();
+	agent = new DBMgr().getDBAgent("movie");
     }
 
     @CrossOrigin
     @RequestMapping(value = "/next/{count}/{sort}/ratevalue/{gteORlte}/{ratevalue}")
-    public List<Document> getNextClusterByRateValue(@PathVariable("gteORlte") String gteORlte,
-	    @PathVariable("ratevalue") int ratevalue, @PathVariable("sort") String sort,
+    public List<Document> getNextClusterByRateValue(@PathVariable("gteORlte") String gteORlte, @PathVariable("ratevalue") int ratevalue, @PathVariable("sort") String sort,
 	    @PathVariable("count") int count) throws IOException
     {
 	List<Document> ret = new ArrayList<>();
@@ -53,8 +52,7 @@ public class GetMovieInfoController
 	}
 	if (gteORlte.equals("gte"))
 	{
-	    ret = agent.findNextCluster(new BasicDBObject("rateValue", new BasicDBObject("$gte", ratevalue)), "good",
-		    count, true, new BasicDBObject("_id", sortOrder));
+	    ret = agent.findNextCluster(new BasicDBObject("rateValue", new BasicDBObject("$gte", ratevalue)), "good", count, true, new BasicDBObject("_id", sortOrder));
 	}
 	else if (gteORlte.equals("lte"))
 	{
@@ -66,8 +64,7 @@ public class GetMovieInfoController
 
     @CrossOrigin
     @RequestMapping(value = "/next/{count}/{sort}}")
-    public List<Document> getNextCluster(@PathVariable("count") int count, @PathVariable("sort") String sort)
-	    throws IOException
+    public List<Document> getNextCluster(@PathVariable("count") int count, @PathVariable("sort") String sort) throws IOException
     {
 
 	log.info("getNextCluster?sort=" + sort + "&count=" + count);

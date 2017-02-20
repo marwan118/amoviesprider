@@ -3,9 +3,9 @@ package org.papaorange.amoviesprider.db;
 public class DBMgr
 {
 
-    private static DBAgent agent = null;
+    private DBAgent agent = null;
 
-    public static DBAgent getDBAgent()
+    public DBAgent getDBAgent(String dbName)
     {
 
 	if (agent != null)
@@ -14,7 +14,7 @@ public class DBMgr
 	}
 	else
 	{
-	    agent = new DBAgent("papaorange.org", 27017, "movie");
+	    agent = new DBAgent("papaorange.org", 27017, dbName);
 	    agent.connect();
 	    return agent;
 	}

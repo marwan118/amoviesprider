@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.papaorange.amoviesprider.proxy.ProxyProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,21 +22,20 @@ public class Utils
     public static Document httpGet(String url) throws IOException
     {
 	log.debug("Download URL:" + url);
-	return Jsoup.connect(url).ignoreContentType(true).header("Accept", "text/html")
-		.header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip").header("Accept-Language", "zh-cn")
-		.header("User-Agent",
-			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
-		.timeout(0).get();
+	String proxy = new ProxyProvider().getRandomProxy();
+
+	String ip = proxy.substring(0, proxy.indexOf(":"));
+	Integer port = Integer.parseInt(proxy.substring(proxy.indexOf(":") + 1));
+	return Jsoup.connect(url).ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip").header("Accept-Language", "zh-cn")
+		.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22").timeout(0).proxy(ip, port).get();
     }
 
     public static Document httpPost(String url, Map<String, String> map, String cookie) throws IOException
     {
 	// 获取请求连接
 	Connection con = Jsoup.connect(url);
-	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8")
-		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
-		.header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0")
-		.timeout(0);
+	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
+		.header("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0").timeout(0);
 	// 遍历生成参数
 	if (map != null)
 	{
@@ -59,11 +59,8 @@ public class Utils
 	// 获取请求连接
 
 	Connection con = Jsoup.connect(url);
-	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8")
-		.header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
-		.header("User-Agent",
-			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22")
-		.timeout(0);
+	con.ignoreContentType(true).header("Accept", "text/html").header("Accept-Charset", "utf-8").header("Accept-Encoding", "gzip").header("Accept-Language", "en-US,en")
+		.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.160 Safari/537.22").timeout(0);
 	// 遍历生成参数
 	if (map != null)
 	{

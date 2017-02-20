@@ -43,7 +43,22 @@ public class GetMovieTorrentController
 
     public GetMovieTorrentController()
     {
-	agent = DBMgr.getDBAgent();
+	agent = new DBMgr().getDBAgent("movie");
+    }
+
+    public void abc(int a)
+    {
+
+    }
+
+    public void abc(int a, int b)
+    {
+
+    }
+
+    public void aabc(int a, int b)
+    {
+
     }
 
     @CrossOrigin

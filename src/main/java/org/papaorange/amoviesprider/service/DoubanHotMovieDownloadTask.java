@@ -21,7 +21,7 @@ public class DoubanHotMovieDownloadTask
     {
 	DBAgent agent = null;
 
-	agent = DBMgr.getDBAgent();
+	agent = new DBMgr().getDBAgent("movie");
 
 	new DoubanDownloaderBFS(url, agent).collectBFS();
     }
@@ -31,14 +31,13 @@ public class DoubanHotMovieDownloadTask
     {
 	DBAgent agent = null;
 
-	agent = DBMgr.getDBAgent();
+	agent = new DBMgr().getDBAgent("movie");
 
 	Document document = null;
 
 	try
 	{
-	    document = Utils.httpGet(
-		    "https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0");
+	    document = Utils.httpGet("https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0");
 	}
 	catch (IOException e)
 	{
@@ -61,9 +60,9 @@ public class DoubanHotMovieDownloadTask
 	}
     }
 
-    // public static void main(String[] args)
-    // {
-    // new DoubanHotMovieDownloadTask().downloadHotMovie();
-    // }
+    public static void main(String[] args)
+    {
+	new DoubanHotMovieDownloadTask().downloadHotMovie();
+    }
 
 }

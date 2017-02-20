@@ -28,10 +28,9 @@ public class TorrentDownloadTask
     public void downloadTorrentTask()
     {
 	DBAgent agent = null;
-	agent = DBMgr.getDBAgent();
+	agent = new DBMgr().getDBAgent("movie");
 	log.info("下载种子任务开始....");
-	List<Document> documents = agent.getDocuments("good",
-		new BasicDBObject().append("magnets", new BasicDBObject().append("$exists", false)));
+	List<Document> documents = agent.getDocuments("good", new BasicDBObject().append("magnets", new BasicDBObject().append("$exists", false)));
 	int total = documents.size();
 	log.info("总计" + total + "部电影待下载Torrent...");
 
@@ -39,8 +38,7 @@ public class TorrentDownloadTask
 	for (Document document : documents)
 	{
 
-	    log.info("第(" + (i++) + "/" + total + ")部电影 : " + document.get("name") + "(" + document.get("year") + ")"
-		    + " URL: " + document.get("url"));
+	    log.info("第(" + (i++) + "/" + total + ")部电影 : " + document.get("name") + "(" + document.get("year") + ")" + " URL: " + document.get("url"));
 	    String imdbLink = (String) document.get("imdbLink");
 	    String imdbId = imdbLink.replace("http://www.imdb.com/title/", "");
 
