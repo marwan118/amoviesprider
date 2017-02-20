@@ -84,8 +84,7 @@ public class DBAgent
 	return ret;
     }
 
-    public int updateOneDocument(String collectionName, String key, Document ori, String toInsertKey,
-	    Object toInsertObj)
+    public int updateOneDocument(String collectionName, String key, Document ori, String toInsertKey, Object toInsertObj)
     {
 	int ret = 0;
 	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
@@ -138,8 +137,7 @@ public class DBAgent
 	}
     }
 
-    public List<Document> findNextCluster(BasicDBObject condiction, String collectionName, int clusterSize,
-	    boolean sort, BasicDBObject sortby)
+    public List<Document> findNextCluster(BasicDBObject condiction, String collectionName, int clusterSize, boolean sort, BasicDBObject sortby)
     {
 	List<Document> result = new ArrayList<>();
 	try
@@ -190,26 +188,30 @@ public class DBAgent
 	return ret;
     }
 
-    // public static void main(String[] args)
-    // {
-    // DBAgent agent = new DBAgent("192.168.1.100", 27017, "movie");
-    // agent.connect();
-    // int i = 0;
-    // while (true)
-    // {
-    // List<Document> documents = agent.findNextCluster(
-    // new BasicDBObject().append("rateValue", new
-    // BasicDBObject().append("$gte", 8)), "good", 50);
-    // if (documents.size() == 0)
-    // {
-    // break;
-    // }
-    // for (Document document : documents)
-    // {
-    // System.out.println(i++ + ":" + document);
-    // }
-    // System.out.println();
-    // }
-    // agent.close();
-    // }
+    public static void main(String[] args)
+    {
+	DBAgent agentMovie = new DBMgr().getDBAgent("movie");
+
+	List<Document> documents = agentMovie.getAllDocuments("good");
+
+	int i = 0, j = 0;
+
+	for (Document document : documents)
+	{
+	    String keyUrl = document.getString("url");
+
+	    if (agentMovie.isDocumentExist("torrents", new BasicDBObject().append("url", keyUrl)))
+	    {
+		System.out.println("存在");
+		i++;
+	    }
+	    else
+	    {
+		System.out.println("不存在");
+		j++;
+	    }
+	}
+
+	System.out.println(i + " " + j);
+    }
 }
