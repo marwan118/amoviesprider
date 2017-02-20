@@ -14,12 +14,15 @@ public class DBConnectionFactory
 	{
 	    DBAgent agent = new DBAgent("papaorange.org", 27017, dbName);
 	    agentMap.put(dbName, agent);
+	    agent.connect();
 	    return agent;
 	}
 	else
 	{
+	    agentMap.get(dbName).connect();
 	    return agentMap.get(dbName);
 	}
+
     }
 
 }

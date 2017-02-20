@@ -19,15 +19,15 @@ public class DoubanCommentParser
     private final static Logger log = LoggerFactory.getLogger(DoubanCommentParser.class);
     private boolean stop = false;
     private String movieURL = "";
-    private LinkedList<DoubanCommentItem> comments = new LinkedList<>();
 
     public DoubanCommentParser(String movieUrl)
     {
 	this.movieURL = movieUrl;
     }
 
-    public void parse() throws ParseException, IOException
+    public LinkedList<DoubanCommentItem> parse() throws ParseException, IOException
     {
+	LinkedList<DoubanCommentItem> ret = new LinkedList<>();
 	String nextPageParams = "";
 	Document document = null;
 	// 大循环
@@ -39,7 +39,6 @@ public class DoubanCommentParser
 	    }
 	    catch (InterruptedException e)
 	    {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
 
@@ -51,7 +50,7 @@ public class DoubanCommentParser
 	    if (commentItems.size() == 0)
 	    {
 		log.error("致命错误，页面中未找到任何评论");
-		return;
+		return ret;
 	    }
 
 	    if (stop == true || nextPageParams.equals(""))
@@ -99,13 +98,12 @@ public class DoubanCommentParser
 		    item.setUserName(userName);
 		    item.setContent(content);
 		    output(item);
-		    comments.add(item);
+		    ret.add(item);
 		    this.stop = false;
 		}
 	    }
-
 	}
-
+	return ret;
     }
 
     private void output(DoubanCommentItem item)
@@ -116,16 +114,16 @@ public class DoubanCommentParser
 	System.out.println("");
     }
 
-    public static void main(String[] args)
-    {
-	try
-	{
-	    new DoubanCommentParser("https://movie.douban.com/subject/26325320/").parse();
-	}
-	catch (ParseException | IOException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-    }
+    // public static void main(String[] args)
+    // {
+    // try
+    // {
+    // new
+    // DoubanCommentParser("https://movie.douban.com/subject/26325320/").parse();
+    // }
+    // catch (ParseException | IOException e)
+    // {
+    // e.printStackTrace();
+    // }
+    // }
 }

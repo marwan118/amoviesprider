@@ -119,6 +119,14 @@ public class DBAgent
 	}
     }
 
+    public void addManyDocuments(List<? extends Document> docs, String collectionName)
+    {
+	MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+
+	collection.insertMany(docs);
+
+    }
+
     public void addOneDocument(Map<String, Object> doc, String collectionName)
     {
 	try
