@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBAgent;
-import org.papaorange.amoviesprider.db.DBMgr;
+import org.papaorange.amoviesprider.db.DBConnectionFactory;
 import org.papaorange.amoviesprider.service.DoubanDownloaderBFS;
 import org.papaorange.amoviesprider.service.DoubanHotMovieDownloadTask;
 import org.papaorange.amoviesprider.service.TorrentDownloadTask;
@@ -31,7 +31,7 @@ public class GetMovieInfoController
 
     public GetMovieInfoController()
     {
-	agent = DBMgr.getDBAgent();
+	agent = DBConnectionFactory.getDBAgent("movie");
     }
 
     @CrossOrigin

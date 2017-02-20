@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBAgent;
-import org.papaorange.amoviesprider.db.DBMgr;
+import org.papaorange.amoviesprider.db.DBConnectionFactory;
 import org.papaorange.amoviesprider.service.TorrentDownloadTask;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +43,7 @@ public class GetMovieTorrentController
 
     public GetMovieTorrentController()
     {
-	agent = DBMgr.getDBAgent();
+	agent = DBConnectionFactory.getDBAgent("movie");
     }
 
     @CrossOrigin

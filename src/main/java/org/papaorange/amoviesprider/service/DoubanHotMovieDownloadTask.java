@@ -4,7 +4,7 @@ import java.io.IOException;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.papaorange.amoviesprider.db.DBAgent;
-import org.papaorange.amoviesprider.db.DBMgr;
+import org.papaorange.amoviesprider.db.DBConnectionFactory;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItem;
 import org.papaorange.amoviesprider.model.DoubanHotMovieItemsCollection;
 import org.papaorange.amoviesprider.utils.Utils;
@@ -21,7 +21,7 @@ public class DoubanHotMovieDownloadTask
     {
 	DBAgent agent = null;
 
-	agent = DBMgr.getDBAgent();
+	agent = DBConnectionFactory.getDBAgent("movie");
 
 	new DoubanDownloaderBFS(url, agent).collectBFS();
     }
@@ -31,7 +31,7 @@ public class DoubanHotMovieDownloadTask
     {
 	DBAgent agent = null;
 
-	agent = DBMgr.getDBAgent();
+	agent = DBConnectionFactory.getDBAgent("movie");
 
 	Document document = null;
 

@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.papaorange.amoviesprider.db.DBAgent;
-import org.papaorange.amoviesprider.db.DBMgr;
+import org.papaorange.amoviesprider.db.DBConnectionFactory;
 import org.papaorange.amoviesprider.model.BtttTorrentItem;
 import org.papaorange.amoviesprider.parser.BtttParser;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class TorrentDownloadTask
     public void downloadTorrentTask()
     {
 	DBAgent agent = null;
-	agent = DBMgr.getDBAgent();
+	agent = DBConnectionFactory.getDBAgent("movie");
 	log.info("下载种子任务开始....");
 	List<Document> documents = agent.getDocuments("good",
 		new BasicDBObject().append("magnets", new BasicDBObject().append("$exists", false)));
